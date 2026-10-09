@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+    ../../modules/nixos/nix.nix
       ../../modules/nixos/ssh.nix
     ];
 
@@ -72,7 +73,6 @@
    ];
  };
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
   # programs.firefox.enable = true;
 
   # List packages installed in system profile.
