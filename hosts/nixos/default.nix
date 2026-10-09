@@ -9,6 +9,7 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ../../modules/nixos/nix.nix
+      ../../modules/nixos/packages.nix
       ../../modules/nixos/ssh.nix
     ];
 
