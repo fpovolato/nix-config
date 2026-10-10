@@ -11,6 +11,7 @@
       ./boot.nix
 
       ../../modules/nixos/boot.nix
+      ../../modules/nixos/filesystems.nix
       ../../modules/nixos/networking.nix
       ../../modules/nixos/nix.nix
       ../../modules/nixos/packages.nix
@@ -84,10 +85,6 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
-
-  fileSystems."/".options = [ "compress=zstd" ];
-  fileSystems."/home".options = [ "compress=zstd" ];
-  fileSystems."/nix".options = [ "compress=zstd" "noatime" ];
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you
