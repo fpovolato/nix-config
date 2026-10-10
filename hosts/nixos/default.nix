@@ -8,9 +8,10 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-    ../../modules/nixos/nix.nix
+      ../../modules/nixos/nix.nix
       ../../modules/nixos/packages.nix
       ../../modules/nixos/ssh.nix
+      ../../modules/nixos/users.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -63,16 +64,6 @@
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.libinput.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
- users.users.xhan = {
-   isNormalUser = true;
-   extraGroups = [ "wheel" "networkmanager" ]; # Enable ‘sudo’ for the user.
-   packages = with pkgs; [
-     tree
-     neovim
-   ];
- };
 
   # programs.firefox.enable = true;
 
