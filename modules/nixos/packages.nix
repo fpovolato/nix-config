@@ -2,8 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
-    git
-    ghostty
+    ghostty.terminfo
     neovim
     tree
     curl
