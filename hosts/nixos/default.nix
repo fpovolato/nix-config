@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ../../modules/nixos/networking.nix
       ../../modules/nixos/nix.nix
       ../../modules/nixos/packages.nix
       ../../modules/nixos/ssh.nix
@@ -20,11 +21,6 @@
 
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
-
-  networking.hostName = "nixos"; # Define your hostname.
-
-  # Configure network connections interactively with nmcli or nmtui.
-  networking.networkmanager.enable = true;
 
   # Set your time zone.
   time.timeZone = "Europe/Rome";
