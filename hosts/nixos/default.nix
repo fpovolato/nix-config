@@ -8,16 +8,15 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./boot.nix
+
+      ../../modules/nixos/boot.nix
       ../../modules/nixos/networking.nix
       ../../modules/nixos/nix.nix
       ../../modules/nixos/packages.nix
       ../../modules/nixos/ssh.nix
       ../../modules/nixos/users.nix
     ];
-
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.limine.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
 
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
