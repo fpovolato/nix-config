@@ -1,0 +1,16 @@
+# Nix build outputs
+/result
+/result-*
+
+# direnv
+.direnv/
+
+# Local env files
+.DS_Store
+
+.env
+.env.*
+!.env.example
+
+# Secrets must remain local
+/secrets/

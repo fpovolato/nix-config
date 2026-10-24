@@ -1,5 +1,6 @@
 {
   imports = [
+    ./common/cli.nix
     ./common/fish.nix
     ./common/git.nix
     ./linux/ghostty.nix
