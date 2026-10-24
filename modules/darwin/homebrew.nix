@@ -1,17 +1,16 @@
 { ... }:
 
 {
-  # Install Homebrew through Nix
   nix-homebrew = {
     enable = true;
     user = "xhan";
   };
 
-  # Manage applications through Homebrew Bundle
   homebrew = {
     enable = true;
 
     enableZshIntegration = true;
+    enableFishIntegration = true;
 
     brews = [
       "git"
@@ -20,6 +19,8 @@
       "bat"
       "ripgrep"
       "fd"
+      "jq"
+      "fzf"
     ];
 
     casks = [
