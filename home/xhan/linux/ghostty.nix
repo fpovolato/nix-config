@@ -1,11 +1,15 @@
 { pkgs, ... }:
 
 {
-  home.packages = [
-    pkgs.ghostty
+  imports = [
+    ../common/ghostty.nix
   ];
 
-  xdg.configFile."ghostty/config.ghostty".text = ''
-    command = ${pkgs.fish}/bin/fish
-  '';
+  programs.ghostty = {
+    package = pkgs.ghostty;
+
+    settings.command = "${pkgs.fish}/bin/fish";
+
+    systemd.enable = false;
+  };
 }

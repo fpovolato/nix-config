@@ -14,6 +14,7 @@ in
 {
   imports = [
     ../common/git.nix
+    ./ghostty.nix
   ];
 
   home = {
@@ -22,11 +23,30 @@ in
     stateVersion = "26.05";
   };
 
-  # Configure Git without installing it via Nixpkgs.
+  # Git is installed through Homebrew.
   programs.git.package = null;
 
-  # Fish is installed by Homebrew.
-  # Home Manager only manages its aliases.
+  # Fish is installed through Homebrew.
+  # Home Manager only manages its configuration.
+
+  home.file.".config/fish/conf.d/10-environment.fish".text = ''
+    # Initialize upstream Nix.
+    if test -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish
+      source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish
+    end
+
+    # Make nix-darwin commands available.
+    if test -d /run/current-system/sw/bin
+      fish_add_path --path --move /run/current-system/sw/bin
+    end
+
+    # Initialize Homebrew and prioritize its applications.
+    if test -x /opt/homebrew/bin/brew
+      eval (/opt/homebrew/bin/brew shellenv fish)
+    end
+  '';
+
+  # Shared aliases with NixOS.
   home.file.".config/fish/conf.d/50-nix-aliases.fish".text =
     fishAliases + "\n";
 }

@@ -15,6 +15,11 @@
 
   users.users.xhan.home = "/Users/xhan";
 
-  # Nix is managed by the upstream installer.
+  # Nix daemon managed by the upstream installer.
   nix.enable = false;
+
+  # Allow Homebrew Fish as a login shell.
+  environment.shells = [
+    "/opt/homebrew/bin/fish"
+  ];
 }
