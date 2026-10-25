@@ -226,6 +226,11 @@ sudo darwin-rebuild switch --flake .#macbook
 
 This applies the current declarative configuration.
 
+After activating the configuration containing the abbreviation, open a new
+Fish shell and type `bswitch`, then press Enter. It builds the configuration
+first and activates it only if the build succeeds. It uses `~/nix-config`
+and works from any directory.
+
 Always validate changes before activation.
 
 ## 8. Verify Homebrew

@@ -2,6 +2,12 @@
 
 let
   aliases = import ../common/aliases.nix;
+  buildCommand = "nix build ~/nix-config#darwinConfigurations.macbook.system --no-link";
+  switchCommand = "sudo darwin-rebuild switch --flake ~/nix-config#macbook";
+  updateCommand = "nix flake update --flake ~/nix-config"
+    + " && " + buildCommand
+    + " && brew update && brew upgrade --greedy"
+    + " && " + switchCommand;
 
   fishAliases = lib.concatStringsSep "\n" (
     lib.mapAttrsToList
@@ -13,6 +19,7 @@ let
 in
 {
   imports = [
+    ../common/fish.nix
     ../common/git.nix
     ./ghostty.nix
   ];
@@ -49,4 +56,10 @@ in
   # Shared aliases with NixOS.
   home.file.".config/fish/conf.d/50-nix-aliases.fish".text =
     fishAliases + "\n";
+
+  # Build and activate from interactive Fish.
+  home.file.".config/fish/conf.d/60-nix-rebuild.fish".text = ''
+    abbr --add bswitch ${lib.escapeShellArg (buildCommand + " && " + switchCommand)}
+    alias update ${lib.escapeShellArg updateCommand}
+  '';
 }

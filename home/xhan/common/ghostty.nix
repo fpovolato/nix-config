@@ -5,8 +5,9 @@
     enable = true;
 
     settings = {
-      # Shared Ghostty settings.
-      # Fonts, themes and keybindings will go here.
+      font-family = "JetBrainsMono Nerd Font";
+      font-size = 16;
+      window-decoration = "none";
     };
   };
 }

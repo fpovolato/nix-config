@@ -15,16 +15,26 @@
     brews = [
       "git"
       "fish"
+      "starship"
       "eza"
       "bat"
       "ripgrep"
       "fd"
       "jq"
       "fzf"
+      "neovim"
     ];
 
     casks = [
+      # Terminal Stuff
       "ghostty"
+      "font-jetbrains-mono-nerd-font"
+
+      # Coding
+      "chatgpt"
+
+      # Browsers
+      "zen"
     ];
 
     onActivation = {
