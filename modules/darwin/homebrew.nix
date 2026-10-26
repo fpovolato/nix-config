@@ -25,6 +25,8 @@
       "neovim"
       "tmux"
       "fastfetch"
+      # Default apps for file types; see home/xhan/darwin/file-associations.nix.
+      "duti"
     ];
 
     casks = [
