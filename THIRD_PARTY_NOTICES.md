@@ -24,7 +24,7 @@ in [LICENSES/Catppuccin-MIT.txt](LICENSES/Catppuccin-MIT.txt).
 ## Artwork
 
 The maintainer confirms authorship of the wallpaper
-`home/xhan/darwin/wallpapers/nixos-wallpaper-catppuccin-mocha.png`
+`wallpapers/nixos-wallpaper-catppuccin-mocha.png`
 and the Nix/Apple fastfetch artwork in `home/xhan/darwin/fastfetch/`.
 The original artwork contributions are covered by the root MIT license.
 Nix/NixOS, Apple and Catppuccin names and marks remain those of their respective

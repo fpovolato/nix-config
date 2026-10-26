@@ -104,7 +104,7 @@ and [Apple's screen saver properties](https://developer.apple.com/documentation/
 
 The macOS wallpaper is managed by `home/xhan/darwin/wallpaper.nix` through
 a Home Manager activation step using macOS AppKit. The PNG is versioned in
-`home/xhan/darwin/wallpapers/` and copied into the Nix store, so activation
+`wallpapers/` at the repository root and copied into the Nix store, so activation
 does not depend on iCloud availability. It was imported from the user's
 iCloud Wallpapers folder; later changes to that original are not synchronized.
 Activation sets the wallpaper on currently connected screens in the user's

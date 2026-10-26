@@ -1,7 +1,7 @@
 { lib, pkgs, ... }:
 
 let
-  wallpaper = ./wallpapers/nixos-wallpaper-catppuccin-mocha.png;
+  wallpaper = ../../../wallpapers/nixos-wallpaper-catppuccin-mocha.png;
   setWallpaper = pkgs.writeText "set-wallpaper.js" ''
     ObjC.import('AppKit');
 

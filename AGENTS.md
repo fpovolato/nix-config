@@ -69,6 +69,7 @@ and `nix develop`, separately from global application management.
 - `home/xhan/linux/`: Linux-only user configuration.
 - `home/xhan/darwin/`: macOS-only user configuration.
 - `docs/`: architectural and operational documentation.
+- `wallpapers/`: versioned wallpaper images.
 
 ## Secrets and Security
 
