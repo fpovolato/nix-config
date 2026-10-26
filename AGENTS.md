@@ -50,6 +50,10 @@ declared in the nix-darwin Homebrew configuration.
 
 Nix may still provide internal build and activation dependencies.
 
+Explicit exception: the Nix language servers `nil` and `nixd` are installed
+through Home Manager in `home/xhan/common/nix-tools.nix` on both hosts,
+because they are unavailable in the configured Homebrew repositories.
+
 Project-specific development environments may use Nix Flakes
 and `nix develop`, separately from global application management.
 

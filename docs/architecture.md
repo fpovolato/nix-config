@@ -59,11 +59,41 @@ nix-darwin modules configure macOS and orchestrate Homebrew.
 macOS settings are split by purpose under `modules/darwin/`:
 
 - `defaults.nix`: user-facing macOS preferences, including the battery
-  percentage in the menu bar for the primary user.
+  percentage in the menu bar, Dock settings for the primary user, and
+  the system-wide Caps Lock to Control keyboard mapping.
 - `security.nix`: authentication settings, including Touch ID for `sudo`
   through `security.pam.services.sudo_local.touchIdAuth`.
 - `homebrew.nix`: application installation.
 - `home-manager.nix`: user configuration integration.
+
+The Dock hides automatically and its pinned items are ordered as Finder,
+Zen, Ghostty, System Settings, Downloads, and Trash. Finder and Trash are
+fixed macOS items; the applications and Downloads are managed through
+`persistent-apps` and `persistent-others`. Recent applications are disabled.
+Other running applications can still appear temporarily in the Dock.
+A small spacer after System Settings visually separates pinned apps from
+other running apps. It is an empty gap, not a divider line; pinned apps
+remain in their original positions when running.
+These lists replace any manually pinned items at the next activation.
+
+The MacBook stays awake with its display on during inactivity:
+`modules/darwin/defaults.nix` sets `power.sleep.computer` and
+`power.sleep.display` to `"never"`. Home Manager disables the primary user's
+automatic screen saver through
+`targets.darwin.currentHostDefaults."com.apple.screensaver".idleTime = 0`.
+This applies on battery as well as external power, increasing battery use.
+Manual locking and lid-close sleep are not disabled.
+See the [nix-darwin power options](https://nix-darwin.github.io/nix-darwin/manual/#opt-power.sleep.display)
+and [Apple's screen saver idle-time definition](https://developer.apple.com/documentation/devicemanagement/screensaveruser).
+
+The macOS wallpaper is managed by `home/xhan/darwin/wallpaper.nix` through
+a Home Manager activation step using macOS AppKit. The PNG is versioned in
+`home/xhan/darwin/wallpapers/` and copied into the Nix store, so activation
+does not depend on iCloud availability. It was imported from the user's
+iCloud Wallpapers folder; later changes to that original are not synchronized.
+Activation sets the wallpaper on currently connected screens in the user's
+graphical session. Additional Spaces or screens connected later may require
+another activation. Dry-run activation does not change the wallpaper.
 
 After activation, log out and back in if the menu bar has not refreshed.
 Touch ID requires an enrolled fingerprint. To check it from a local terminal,
@@ -74,6 +104,18 @@ run `sudo -k` followed by `sudo -v`; password authentication remains available.
 NixOS uses Nixpkgs.
 
 macOS uses Homebrew for global CLI and GUI applications.
+
+The explicitly approved exception is `nil` and `nixd`: Home Manager installs
+these Nix language servers from the pinned Nixpkgs on both hosts through
+`home/xhan/common/nix-tools.nix`. On macOS, Fish adds the Home Manager profile
+bin directory (`/etc/profiles/per-user/xhan/bin`) to PATH, including in login
+and non-interactive shells. NixOS provides the user profile PATH through its
+standard shell integration.
+
+After activation, restart Zed and open a new shell. Check both servers with
+`command -v nil nixd`. Zed's Nix extension uses the language servers from PATH;
+Zed obtains the environment from the launching CLI or from a login shell
+when launched graphically. See [Zed's environment documentation](https://zed.dev/docs/environment).
 
 The macOS Homebrew configuration is located at:
 `modules/darwin/homebrew.nix`.
@@ -90,6 +132,9 @@ Platform-specific configuration belongs in:
 
 The shared alias definitions are in:
 `home/xhan/common/aliases.nix`.
+
+Ghostty uses the built-in `Catppuccin Mocha` theme on both hosts, declared
+through Home Manager in `home/xhan/common/ghostty.nix`.
 
 On macOS, Home Manager generates Fish alias configuration
 without installing another copy of Fish.

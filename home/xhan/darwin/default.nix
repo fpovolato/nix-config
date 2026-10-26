@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ config, lib, ... }:
 
 let
   aliases = import ../common/aliases.nix;
@@ -21,7 +21,9 @@ in
   imports = [
     ../common/fish.nix
     ../common/git.nix
+    ../common/nix-tools.nix
     ./ghostty.nix
+    ./wallpaper.nix
   ];
 
   home = {
@@ -32,6 +34,9 @@ in
 
   # Git is installed through Homebrew.
   programs.git.package = null;
+
+  # Disable automatic screen saver activation for this Mac.
+  targets.darwin.currentHostDefaults."com.apple.screensaver".idleTime = 0;
 
   # Fish is installed through Homebrew.
   # Home Manager only manages its configuration.
@@ -46,6 +51,9 @@ in
     if test -d /run/current-system/sw/bin
       fish_add_path --path --move /run/current-system/sw/bin
     end
+
+    # Include Home Manager packages in login and non-interactive Fish too.
+    fish_add_path --path ${lib.escapeShellArg "${config.home.profileDirectory}/bin"}
 
     # Initialize Homebrew and prioritize its applications.
     if test -x /opt/homebrew/bin/brew

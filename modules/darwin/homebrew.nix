@@ -23,18 +23,29 @@
       "jq"
       "fzf"
       "neovim"
+      "tmux"
     ];
 
     casks = [
+      # Normie Apps
+      "spotify"
+      "obsidian"
+
+      # Content Creation
+      "artcraft-launcher"
+
       # Terminal Stuff
       "ghostty"
       "font-jetbrains-mono-nerd-font"
 
       # Coding
       "chatgpt"
+      "claude"
+      "zed"
 
       # Browsers
       "zen"
+      "helium-browser"
     ];
 
     onActivation = {
