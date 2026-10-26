@@ -66,6 +66,11 @@ for an agent to understand the setup, change it and validate the result.
 
 ### NixOS desktop
 
+> [!CAUTION]
+> The NixOS desktop configuration is at a very early stage. It is incomplete,
+> tailored to the maintainer's hardware and not recommended for use yet.
+> The macOS setup is the supported path.
+
 - [x] Hyprland with XWayland support.
 - [x] Limine bootloader with a Windows boot entry.
 - [x] Btrfs subvolumes with Zstd compression.
@@ -228,14 +233,80 @@ If the repository is private, authenticate with GitHub first. Do not embed a
 personal access token in the clone URL. SSH setup is documented in the
 [MacBook bootstrap guide](docs/bootstrap/macbook.md#3-configure-github-ssh).
 
-This private configuration also fetches `fpovolato/nix-secrets` over SSH.
-You must have access to that repository to evaluate either host. If adapting
-the setup for another account, change `inputs.nix-secrets.url` in `flake.nix`
-to your own private repository with the same public-key path, then run
-`nix flake update nix-secrets`. A copied configuration cannot use the
-maintainer's private input without access.
+The flake also fetches the maintainer's private `fpovolato/nix-secrets`
+repository over SSH. A fork cannot access it, so create your own before
+evaluating either host.
 
-### 4. Change user and host
+### 4. Create your own `nix-secrets`
+
+`nix-secrets` is a private, non-flake input. Today it supplies one file:
+the **public** SSH key that may log in to the NixOS host, at
+`public-keys/ssh/macbook.pub`. Both hosts need the input to evaluate, even if
+you only use the Mac.
+
+1. On GitHub, create an empty **private** repository named `nix-secrets`
+   (no README, license or `.gitignore`). Check that SSH access to GitHub works:
+
+   ```sh
+   ssh -T git@github.com
+   ```
+
+   If you have no SSH key yet, follow the
+   [MacBook bootstrap guide](docs/bootstrap/macbook.md#3-configure-github-ssh).
+
+2. Create the repository locally with the expected layout. Copy only the
+   `.pub` file; never the private key:
+
+   ```sh
+   mkdir -p ~/nix-secrets/public-keys/ssh
+   cd ~/nix-secrets
+   git init -b main
+   cp ~/.ssh/id_ed25519.pub public-keys/ssh/macbook.pub
+   git add public-keys/ssh/macbook.pub
+   git commit -m "Add SSH login public key"
+   git remote add origin git@github.com:YOUR_ACCOUNT/nix-secrets.git
+   git push -u origin main
+   ```
+
+   Keep the file name `macbook.pub` unless you also change the path in
+   `modules/nixos/ssh.nix`. The key is the one allowed to log in to NixOS over
+   SSH, so use a key from the machine you will connect from.
+
+3. Point your fork at it. In `flake.nix`, set:
+
+   ```nix
+   nix-secrets = {
+     url = "git+ssh://git@github.com/YOUR_ACCOUNT/nix-secrets.git?ref=main";
+     flake = false;
+   };
+   ```
+
+   Then pin your repository in `flake.lock` and commit both files:
+
+   ```sh
+   cd ~/nix-config
+   nix flake update nix-secrets
+   git add flake.nix flake.lock
+   ```
+
+To try the layout before pushing, override the input with the local clone
+for a single command; this does not change `flake.lock`:
+
+```sh
+nix eval --raw '.#nixosConfigurations.nixos.config.system.build.toplevel.drvPath' \
+  --override-input nix-secrets "git+file://$HOME/nix-secrets"
+```
+
+Later changes follow the same path: commit and push in `nix-secrets`, then run
+`nix flake update nix-secrets` here and review the lockfile diff.
+
+> [!WARNING]
+> A private repository controls who can **fetch** the files; it does not
+> encrypt them. The input is copied into the Nix store, which every local user
+> can read. Store only public keys and, once agenix is integrated, encrypted
+> files. Never commit private keys, tokens or plaintext passwords there.
+
+### 5. Change user and host
 
 These are three independent identifiers:
 
@@ -284,11 +355,11 @@ git config --local user.email "YOUR_VERIFIED_OR_NOREPLY_EMAIL"
 Changing the Mac configuration does not grant access to the NixOS host.
 The pinned `nix-secrets` input supplies `public-keys/ssh/macbook.pub`, which
 authorizes the maintainer's key on Linux only. If you also adopt the Linux
-configuration, use your own **public** key in your private input and review
-Linux usernames and hardware configuration separately. Never copy a private
-SSH key into either repository.
+configuration, put your own **public** key in your `nix-secrets` (step 4) and
+review Linux usernames and hardware configuration separately. Never copy a
+private SSH key into either repository.
 
-### 5. Review what activation changes
+### 6. Review what activation changes
 
 - Edit `modules/darwin/homebrew.nix` for applications. Its
   `cleanup = "uninstall"` removes undeclared Homebrew formulae, casks and taps
@@ -304,7 +375,7 @@ SSH key into either repository.
   checking out another revision can change the running app without a rebuild.
 - Wallpaper and default file associations are applied by activation scripts.
 
-### 6. Validate, then activate explicitly
+### 7. Validate, then activate explicitly
 
 The following commands use the renamed output `laptop`. If you kept the
 original output, replace `laptop` with `macbook`.
@@ -342,7 +413,7 @@ Homebrew should be under `/opt/homebrew`. If an existing config file conflicts
 with Home Manager, back it up and inspect it before retrying; do not delete
 unrelated settings blindly.
 
-### 7. Enable local secret checks
+### 8. Enable local secret checks
 
 For each clone, including the first one:
 
