@@ -22,6 +22,7 @@ in
     ../common/fish.nix
     ../common/git.nix
     ../common/nix-tools.nix
+    ./fastfetch.nix
     ./ghostty.nix
     ./omniwm.nix
     ./wallpaper.nix

@@ -24,6 +24,7 @@
       "fzf"
       "neovim"
       "tmux"
+      "fastfetch"
     ];
 
     casks = [

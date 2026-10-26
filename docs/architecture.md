@@ -183,6 +183,24 @@ and enable prompt integration. On macOS, Homebrew installs both programs;
 Home Manager manages the Fish initialization file. The pinned Home Manager
 modules require packages and would otherwise install Nix copies on macOS.
 
+Fastfetch is installed through Nixpkgs on NixOS and through Homebrew on
+macOS. On NixOS it uses its built-in NixOS logo. On macOS,
+`home/xhan/darwin/fastfetch.nix` configures it with `package = null` and a
+custom logo: the NixOS snowflake with the Apple logo in its centre.
+It is shown as an image, `home/xhan/darwin/fastfetch/logo.png` (cropped to
+the emblem and scaled to 512×512), with `type = "kitty-direct"`: Ghostty
+reads the PNG from the Nix store through the Kitty graphics protocol, so the
+Homebrew fastfetch needs no ImageMagick. `logo.width` and `logo.height` are
+in terminal cells. An ASCII version, `home/xhan/darwin/fastfetch/logo.txt`,
+is kept for terminals without that protocol; it uses fastfetch's `$1`–`$3`
+colour placeholders (the two lambda colours and the apple), set in
+`logo.color` (blue, cyan and white) when it is used.
+The information column uses a minimal style: Nerd Font icons as keys (they
+need a Nerd Font, such as the JetBrains Mono Nerd Font used in Ghostty),
+short value formats, grey rules between groups and a row of colour circles.
+The module list must stay explicit, because a config file without `modules`
+prints only the logo.
+
 ### Rebuilding from Fish
 
 With this configuration activated, type `bswitch` and press Enter in
