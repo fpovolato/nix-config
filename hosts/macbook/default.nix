@@ -3,6 +3,7 @@
 {
   imports = [
     ../../modules/darwin/defaults.nix
+    ../../modules/darwin/networking.nix
     ../../modules/darwin/security.nix
     ../../modules/darwin/homebrew.nix
     ../../modules/darwin/home-manager.nix

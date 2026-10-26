@@ -24,6 +24,7 @@ future transition to public visibility.
 
 - Platform: aarch64-darwin
 - Hardware: MacBook Pro M2
+- Host name: nixmbp
 - Operating system: macOS
 - User: xhan
 - System configuration: nix-darwin 26.05
@@ -61,6 +62,10 @@ macOS settings are split by purpose under `modules/darwin/`:
 - `defaults.nix`: user-facing macOS preferences, including the battery
   percentage in the menu bar, Dock settings for the primary user, and
   the system-wide Caps Lock to Control keyboard mapping.
+- `networking.nix`: the Mac's names. `computerName`, `localHostName`
+  (Bonjour, `nixmbp.local`) and `hostName` are all `nixmbp`. The flake
+  output stays `macbook`; rebuild commands name it explicitly, so they do
+  not depend on the host name.
 - `security.nix`: authentication settings, including Touch ID for `sudo`
   through `security.pam.services.sudo_local.touchIdAuth`.
 - `homebrew.nix`: application installation.
@@ -217,6 +222,11 @@ Secret repository integration, recipient configuration
 and recovery procedures are not implemented yet.
 
 No plaintext secrets belong in this repository.
+
+Public keys are not secrets and stay here. `keys/macbook.pub` is the public
+half of the MacBook's `~/.ssh/id_ed25519` (comment `xhan@nixmbp`) and is
+authorized for `xhan` on NixOS by `modules/nixos/ssh.nix`. The private key
+never leaves the Mac.
 
 ## Operational Considerations
 
