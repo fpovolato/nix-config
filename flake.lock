@@ -77,6 +77,23 @@
         "type": "github"
       }
     },
+    "nix-secrets": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793032621,
+        "narHash": "sha256-V9BtUP6J44rG/9fB3ZdX2dYFAfyedSn2RatDzg04QQ0=",
+        "ref": "main",
+        "rev": "05a42b8dc1e5081d9b1ba805425756cf4e2fd77a",
+        "revCount": 1,
+        "type": "git",
+        "url": "ssh://git@github.com/fpovolato/nix-secrets.git"
+      },
+      "original": {
+        "ref": "main",
+        "type": "git",
+        "url": "ssh://git@github.com/fpovolato/nix-secrets.git"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1792898606,
@@ -114,6 +131,7 @@
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
+        "nix-secrets": "nix-secrets",
         "nixpkgs": "nixpkgs",
         "nixpkgs-darwin": "nixpkgs-darwin"
       }

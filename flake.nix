@@ -18,6 +18,11 @@
     };
 
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+
+    nix-secrets = {
+      url = "git+ssh://git@github.com/fpovolato/nix-secrets.git?ref=main";
+      flake = false;
+    };
   };
 
   outputs = {
@@ -25,10 +30,12 @@
     home-manager,
     nix-darwin,
     nix-homebrew,
+    nix-secrets,
     ...
   }: {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
+      specialArgs.privateFiles = nix-secrets;
       modules = [
         home-manager.nixosModules.home-manager
         ./hosts/nixos

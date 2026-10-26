@@ -72,8 +72,9 @@ and `nix develop`, separately from global application management.
 
 ## Secrets and Security
 
-The separate private `nix-secrets` repository is planned but
-not yet integrated.
+The separate private `nix-secrets` repository is pinned as a non-flake input.
+It supplies the public SSH login key used by NixOS. Encrypted credential
+storage is prepared there; agenix runtime decryption is not integrated yet.
 
 Never commit plaintext credentials, private keys, tokens,
 passwords or other sensitive information.

@@ -47,6 +47,7 @@ The option `nix.enable = false` preserves this arrangement.
 - home-manager: release-26.05
 - nix-darwin: nix-darwin-26.05
 - nix-homebrew
+- nix-secrets: private Git repository over SSH, consumed with `flake = false`
 
 The exact input revisions are recorded in `flake.lock`.
 
@@ -259,19 +260,24 @@ Homebrew applications on macOS.
 
 ## Secrets
 
-A separate private `nix-secrets` repository is planned.
+The private `nix-secrets` repository is a pinned non-flake input fetched over
+SSH. Both host evaluations require access to this input. NixOS receives it as
+`privateFiles` through `specialArgs` and loads its public SSH login key from
+`public-keys/ssh/macbook.pub` in `modules/nixos/ssh.nix`.
 
-Agenix is the intended initial encryption solution.
+The login key is unchanged; its source has moved out of this repository.
+It remains distinct from the dedicated agenix administrator encryption key.
+Neither private key belongs in either repository. Public keys need no encryption.
 
-Secret repository integration, recipient configuration
-and recovery procedures are not implemented yet.
+`nix-secrets` provides pinned agenix tooling, recipient rules and checks for
+future encrypted credentials. No runtime decryption modules or real credentials
+are configured here yet. Username, Git identity and hostnames remain in
+nix-config. Never put plaintext credentials in either Git repository or the
+Nix store; the private input itself is copied into the store.
 
-No plaintext secrets belong in this repository.
-
-Public keys are not secrets and stay here. `keys/macbook.pub` is the public
-half of the MacBook's `~/.ssh/id_ed25519` (comment `xhan@nixmbp`) and is
-authorized for `xhan` on NixOS by `modules/nixos/ssh.nix`. The private key
-never leaves the Mac.
+To update a public login key, commit and push the change in nix-secrets, run
+`nix flake update nix-secrets` here, validate NixOS and review the lockfile.
+Activation remains a separate, explicitly authorized step.
 
 ## Operational Considerations
 

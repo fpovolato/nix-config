@@ -11,7 +11,9 @@
 
 <p align="center">
   <a href="#install-on-another-mac">Install on macOS</a> ·
-  <a href="#the-setup">The setup</a> ·
+  <a href="#features">Features</a> ·
+  <a href="#roadmap">Roadmap</a> ·
+  <a href="#built-for-humans-and-coding-agents">Working with agents</a> ·
   <a href="#repository-layout">Structure</a> ·
   <a href="docs/architecture.md">Documentation</a> ·
   <a href="LICENSE">MIT license</a>
@@ -22,6 +24,10 @@
 A personal Nix configuration for a Linux desktop and an Apple Silicon Mac.
 Shared settings keep the essentials consistent, while dedicated platform
 modules let each machine use its native tools.
+
+**Designed to be maintained by humans and coding agents alike.** Clear module
+boundaries, written instructions and repeatable checks make it straightforward
+for an agent to understand the setup, change it and validate the result.
 
 ## The setup
 
@@ -37,16 +43,64 @@ modules let each machine use its native tools.
 | **Flake output** | `nixos` | `macbook` |
 | **Account / hostname** | `xhan` / `nixos` | `xhan` / `nixmbp` |
 
-### What’s inside
+## Features
 
-- **A shared terminal environment** — Ghostty, Fish, Starship, shell aliases
-  and a custom cursor trail.
-- **A tailored macOS desktop** — tiling, an OmniShell bar, workspace rules,
-  wallpaper, Dock preferences and file associations.
-- **Small, focused modules** — host definitions, system services and user
-  settings live in separate layers.
-- **Checks before changes** — build without activation, scan staged files
-  with Gitleaks, and scan files and history in CI.
+### Shared foundation
+
+- [x] One flake for NixOS and macOS, with pinned Nix inputs.
+- [x] Separate host, system and user modules, with shared Home Manager settings.
+- [x] Ghostty with Catppuccin Mocha, a block cursor and a custom cursor trail.
+- [x] Fish, Starship and shared command aliases.
+- [x] `nil` and `nixd` language servers for editing Nix configuration.
+- [x] Build-and-activate helpers and an explicit update workflow.
+- [x] Agent instructions, architecture documentation and a Mac installation guide.
+
+### macOS desktop
+
+- [x] Homebrew applications managed through nix-darwin and nix-homebrew.
+- [x] OmniWM tiling, workspace rules and an embedded Ghostty quake terminal.
+- [x] OmniShell bar with a customized volume widget.
+- [x] Declarative Dock, Finder, keyboard and default file association settings.
+- [x] Custom wallpaper and fastfetch artwork.
+- [x] Touch ID for sudo, idle screen saver and immediate password requirement.
+
+### NixOS desktop
+
+- [x] Hyprland with XWayland support.
+- [x] Limine bootloader with a Windows boot entry.
+- [x] Btrfs subvolumes with Zstd compression.
+- [x] NetworkManager and SSH restricted to the configured user, with password
+  and keyboard-interactive authentication disabled.
+
+### Repository checks
+
+- [x] Gitleaks hook for staged changes, enabled separately in each clone.
+- [x] A script to scan current source files and locally reachable Git history.
+- [x] GitHub Actions workflow for secret scanning on pushes and pull requests.
+- [x] Documented evaluation and build commands before system activation.
+
+## Roadmap
+
+Unchecked items are not implemented. The planned work below is already
+identified in the project documentation; the proposals are possible next steps,
+with no fixed delivery schedule.
+
+### Planned
+
+- [x] Reference SSH public keys from the pinned private `nix-secrets` repository.
+- [ ] Integrate agenix runtime decryption for credentials used by services.
+- [ ] Define encryption recipients, key rotation and secret recovery procedures.
+
+### Proposed next steps
+
+- [ ] Centralize user, hostname and flake-output settings to simplify adoption
+  on another machine.
+- [ ] Add Nix evaluation and build checks to CI alongside secret scanning.
+- [ ] Add a NixOS bootstrap guide covering hardware generation and disk layout.
+- [ ] Support versioned custom OmniShell profiles, extending the existing
+  copy-on-activation approach used for widgets.
+- [ ] Document rollback and recovery for failed Nix activations and Homebrew
+  upgrades, including their different recovery mechanisms.
 
 Nix inputs are pinned in `flake.lock`. Homebrew application versions are not
 fully reproducible from that lockfile. On macOS, Home Manager primarily manages
@@ -57,6 +111,34 @@ settings; `nil` and `nixd` are the documented Nix-installed tool exceptions.
 > Homebrew cleanup policy, keyboard shortcuts and account settings. The Mac
 > setup targets **Apple Silicon with macOS 26 or later** because of OmniWM;
 > Intel Macs are not validated here.
+
+## Built for humans and coding agents
+
+Agent-assisted maintenance is part of the design of this repository. You can
+ask a coding agent to add applications, adjust desktop settings, maintain
+shared dotfiles or adapt the configuration to another machine. The repository
+provides the context and workflow for making those changes reviewable:
+
+- **An explicit starting point:** [AGENTS.md](AGENTS.md) defines the architecture,
+  package-management rules, validation commands and change procedure.
+- **Predictable places to edit:** `hosts/`, `modules/` and `home/` separate
+  machine definitions, platform settings and user configuration.
+- **Documented decisions:** [the architecture guide](docs/architecture.md) and
+  feature guides explain how the pieces fit together and what needs updating.
+- **Verification before activation:** agents can evaluate the affected host,
+  build the macOS configuration without activating it, scan for secrets and
+  present the Git diff for review.
+
+For example, a request can be as simple as:
+
+> Read AGENTS.md, add a CLI tool to the Mac's Homebrew configuration, validate
+> the macOS build and explain the diff. Do not activate the configuration.
+
+System activation and commits require explicit authorization under the project
+instructions. These are workflow rules, not a sandbox: configure the agent's
+permissions separately. OmniWM's live-linked settings are an exception to the
+usual build-and-activate workflow; editing them can affect the running app
+immediately, as explained in [the OmniWM guide](docs/omniwm.md).
 
 ## Repository layout
 
@@ -75,7 +157,6 @@ settings; `nil` and `nixd` are the documented Nix-installed tool exceptions.
 │   ├── linux/                # Linux user settings
 │   └── darwin/               # macOS user settings and artwork
 ├── docs/                     # Architecture and operational guides
-├── keys/                     # Public SSH keys only
 ├── scripts/                  # Repository checks
 ├── .githooks/                # Staged-secret check
 └── .github/workflows/        # Secret scanning in CI
@@ -147,6 +228,13 @@ If the repository is private, authenticate with GitHub first. Do not embed a
 personal access token in the clone URL. SSH setup is documented in the
 [MacBook bootstrap guide](docs/bootstrap/macbook.md#3-configure-github-ssh).
 
+This private configuration also fetches `fpovolato/nix-secrets` over SSH.
+You must have access to that repository to evaluate either host. If adapting
+the setup for another account, change `inputs.nix-secrets.url` in `flake.nix`
+to your own private repository with the same public-key path, then run
+`nix flake update nix-secrets`. A copied configuration cannot use the
+maintainer's private input without access.
+
 ### 4. Change user and host
 
 These are three independent identifiers:
@@ -194,10 +282,11 @@ git config --local user.email "YOUR_VERIFIED_OR_NOREPLY_EMAIL"
 ```
 
 Changing the Mac configuration does not grant access to the NixOS host.
-`keys/macbook.pub` authorizes the maintainer's key on Linux only. If you also
-adopt the Linux configuration, replace it with your own **public** key and
-review Linux usernames and hardware configuration separately. Never copy a
-private SSH key into this repository.
+The pinned `nix-secrets` input supplies `public-keys/ssh/macbook.pub`, which
+authorizes the maintainer's key on Linux only. If you also adopt the Linux
+configuration, use your own **public** key in your private input and review
+Linux usernames and hardware configuration separately. Never copy a private
+SSH key into either repository.
 
 ### 5. Review what activation changes
 

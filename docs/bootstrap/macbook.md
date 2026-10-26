@@ -313,10 +313,12 @@ Nix Flakes and `nix develop`.
 
 ## 11. Secrets
 
-A separate private repository named `nix-secrets`
-is planned but is not yet integrated.
+A separate private repository named `nix-secrets` is pinned as an input.
+It currently supplies the NixOS SSH public login key. Fetching the flake,
+including on macOS, requires SSH access to that repository.
 
-Agenix is the intended initial solution.
+Agenix tooling and recipient rules are prepared in nix-secrets; runtime
+decryption in nix-config is not yet integrated.
 
 Never store plaintext secrets or private keys in
 the configuration repository or Nix Store.

@@ -1,3 +1,5 @@
+{ privateFiles, ... }:
+
 {
   services.openssh = {
     enable = true;
@@ -11,6 +13,6 @@
   };
 
   users.users.xhan.openssh.authorizedKeys.keyFiles = [
-    ../../keys/macbook.pub
+    "${privateFiles}/public-keys/ssh/macbook.pub"
   ];
 }

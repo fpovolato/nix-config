@@ -9,7 +9,8 @@ and fingerprints can still link machines or accounts.
 Keep plaintext secrets outside the repository and the Nix store. Ignoring a
 file in Git is not an access-control boundary. Nix store contents are readable
 by local users; a private input repository alone does not make secrets safe.
-A separate encrypted `nix-secrets` setup is planned, not implemented.
+The private `nix-secrets` input supplies SSH public keys and has tooling for
+encrypted credentials. Runtime credential decryption is not integrated yet.
 See the [Nix secrets guidance](https://nix.dev/manual/nix/stable/store/secrets).
 
 ## Automated checks
