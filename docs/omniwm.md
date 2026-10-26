@@ -149,6 +149,13 @@ workspaces and scratchpads on the left; the active window in the center; and
 media, notifications, volume, Wi-Fi, battery, Control Center, system stats and
 the clock on the right.
 
+The user `shell.toml` overrides `profiles.default.leading` and
+`profiles.default.trailing` to move `media` from the right to the left,
+right after `apple-menu`: on the right, the now-playing title overlapped the
+active window's title in the center. The lists replace the profile's ones,
+so they restate the remaining default widgets in order; check them against
+`default/shell.toml` after an OmniWM upgrade.
+
 ## Making Changes
 
 ### OmniWM Settings
