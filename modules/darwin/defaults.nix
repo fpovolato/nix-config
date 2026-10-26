@@ -15,6 +15,12 @@
   # Preferences for the primary macOS user.
   system.defaults.controlcenter.BatteryShowPercentage = true;
 
+  # Show the current folder's path in Finder windows.
+  system.defaults.finder = {
+    ShowPathbar = true;
+    _FXShowPosixPathInTitle = true;
+  };
+
   system.defaults.dock = {
     autohide = true;
     # Use the native divider around the recent applications section.

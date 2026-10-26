@@ -60,8 +60,10 @@ nix-darwin modules configure macOS and orchestrate Homebrew.
 macOS settings are split by purpose under `modules/darwin/`:
 
 - `defaults.nix`: user-facing macOS preferences, including the battery
-  percentage in the menu bar, Dock settings for the primary user, and
-  the system-wide Caps Lock to Control keyboard mapping.
+  percentage in the menu bar, Dock settings for the primary user, Finder's
+  path bar (`ShowPathbar`) and full POSIX path in the window title
+  (`_FXShowPosixPathInTitle`), and the system-wide Caps Lock to Control
+  keyboard mapping.
 - `networking.nix`: the Mac's names. `computerName`, `localHostName`
   (Bonjour, `nixmbp.local`) and `hostName` are all `nixmbp`. The flake
   output stays `macbook`; rebuild commands name it explicitly, so they do
@@ -69,7 +71,61 @@ macOS settings are split by purpose under `modules/darwin/`:
 - `security.nix`: authentication settings, including Touch ID for `sudo`
   through `security.pam.services.sudo_local.touchIdAuth`.
 - `homebrew.nix`: application installation.
+- `omniwm.nix`: the OmniWM tiling window manager (see below).
 - `home-manager.nix`: user configuration integration.
+
+### OmniWM
+
+[OmniWM](https://omniwm.app/) tiles windows on the MacBook. It requires
+macOS 26 or later on Apple Silicon. `modules/darwin/omniwm.nix` declares:
+
+- the `omniwm` Homebrew cask, which also links `omniwmctl` into
+  `/opt/homebrew/bin`. Home Manager's `programs.omniwm` module and the
+  Nixpkgs package exist only on unstable branches and would install a Nix
+  copy, against the macOS package policy.
+- `system.defaults.spaces.spans-displays = false`, the macOS default
+  "Displays have separate Spaces". OmniWM pauses window management without it.
+- a launchd user agent, `org.nixos.omniwm`, that starts the app at login and
+  restarts it after a crash but not after Quit. Logs go to
+  `~/Library/Logs/omniwm.log` and `omniwm.err.log`. Leave OmniWM's own
+  "Start at Login" setting off, or two instances will start.
+
+macOS privacy permissions cannot be declared: on first launch, grant
+Accessibility and Input Monitoring (required) and optionally Screen Recording,
+then click Start OmniWM. A cask upgrade replaces the app bundle, so quit
+OmniWM before upgrading it with Homebrew.
+
+OmniWM keeps its settings in `~/.config/omniwm/settings.toml`. The versioned
+copy is `home/xhan/darwin/omniwm/settings.toml`; `home/xhan/darwin/omniwm.nix`
+makes the config path a Home Manager out-of-store symlink to that file in
+`~/nix-config`, not to a Nix store copy. OmniWM writes through symlinks, so
+the Settings window and live reload keep working: changes made in the GUI
+land in the working tree, to be reviewed with `git diff` and committed. The
+file is therefore not pinned by the flake; only the link is.
+
+The schema is strict: in a `schemaVersion = 5` file, one missing required key,
+unknown hotkey action or invalid enum value rejects the whole file and OmniWM
+runs with defaults. The file is therefore taken from OmniWM's own canonical
+output rather than written by hand. See the
+[configuration guide](https://omniwm.app/config/configuration/) and
+[settings reference](https://omniwm.app/config/settings-reference/).
+The captured file was written by OmniWM 0.7.6 with `schemaVersion = 4`; the
+online reference follows upstream `main` and already describes version 5.
+OmniWM upgrades older schema versions by rewriting the file (through the link,
+so the upgrade appears in `git diff`) after backing up the original next to
+`~/.config/omniwm/settings.toml` (for version 5, as `settings.toml.pre-v5`).
+
+The link is created only when `home/xhan/darwin/omniwm/settings.toml` is in
+the flake source, i.e. tracked by Git (`builtins.pathExists`). To capture it
+the first time:
+
+1. Activate, launch OmniWM and grant its permissions.
+2. From its menu bar icon, choose Reveal Settings File; this writes a complete
+   canonical file if none exists.
+3. Copy `~/.config/omniwm/settings.toml` to
+   `home/xhan/darwin/omniwm/settings.toml` and `git add` it.
+4. Activate again. `force = true` lets Home Manager replace OmniWM's regular
+   file with the link.
 
 The Dock hides automatically and its pinned items are ordered as Finder,
 Zen, Ghostty, System Settings, Downloads, and Trash. Finder and Trash are

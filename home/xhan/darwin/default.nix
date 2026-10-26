@@ -23,6 +23,7 @@ in
     ../common/git.nix
     ../common/nix-tools.nix
     ./ghostty.nix
+    ./omniwm.nix
     ./wallpaper.nix
   ];
 
