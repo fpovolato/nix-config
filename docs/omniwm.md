@@ -180,9 +180,10 @@ The user `shell.toml` overrides `profiles.default.leading`,
 the profile's ones, so check them against `default/shell.toml` after an
 OmniWM upgrade.
 
-- Left: `media` moves right after `apple-menu`. On the right, the
-  now-playing title overlapped the active window's title in the center.
-- Center: empty (`center = []`), so the active window's title is not shown.
+- Left: `media` is removed from the profile's list.
+- Center: only `media` (`center = ["media"]`). With `fullWidthNotchMode =
+  "rightOfNotch"` the center group sits just right of the notch, so the
+  now-playing widget is shown there. The active window's title is not shown.
 - Right, in this order: `wifi`, `volume`, `battery-details`, `system-stats`,
   `clock` (date and time; its `date` option defaults to on) and
   `notifications`. `control-center` is left out.

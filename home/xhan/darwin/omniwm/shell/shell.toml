@@ -1,8 +1,8 @@
 profile = "default"
 
 [profiles.default]
-leading = ["apple-menu", "media", "app-menu", "omniwm", "workspaces", "scratchpads"]
-center = []
+leading = ["apple-menu", "app-menu", "omniwm", "workspaces", "scratchpads"]
+center = ["media"]
 trailing = ["wifi", "volume", "battery-details", "system-stats", "clock", "notifications"]
 
 [profiles.default.workspaceBar]
