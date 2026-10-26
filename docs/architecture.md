@@ -90,6 +90,15 @@ macOS 26 or later on Apple Silicon. `modules/darwin/omniwm.nix` declares:
   `~/Library/Logs/omniwm.log` and `omniwm.err.log`. Leave OmniWM's own
   "Start at Login" setting off, or two instances will start.
 
+OmniWM's default Command Palette shortcut, Control+Option+Space, is also the
+macOS shortcut "Select next source in Input menu". Home Manager
+(`home/xhan/darwin/omniwm.nix`) disables only that macOS entry, symbolic hotkey
+61 in `com.apple.symbolichotkeys`, using `defaults write ... -dict-add` so the
+other shortcuts are preserved, then reloads them with `activateSettings -u`.
+Control+Space (hotkey 60) still switches between the Italian - Pro and ABC
+layouts. Re-enabling the shortcut in System Settings lasts only until the next
+activation.
+
 macOS privacy permissions cannot be declared: on first launch, grant
 Accessibility and Input Monitoring (required) and optionally Screen Recording,
 then click Start OmniWM. A cask upgrade replaces the app bundle, so quit
