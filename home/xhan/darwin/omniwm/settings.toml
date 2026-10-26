@@ -64,7 +64,7 @@ hyperKeyModifiers = "Control+Option+Shift+Command"
 ipcEnabled = true
 preventSleepEnabled = false
 systemHyperTrigger = "None"
-updateChecksEnabled = true
+updateChecksEnabled = false
 workspaceAutoBackAndForth = false
 
 [gestures]
@@ -161,6 +161,7 @@ heightPercent = 50.0
 monitorMode = "focusedWindow"
 opacity = 1.0
 position = "center"
+provider = "ghostty"
 widthPercent = 50.0
 
 [routing]

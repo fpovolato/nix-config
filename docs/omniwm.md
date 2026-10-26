@@ -216,6 +216,17 @@ Find an app's bundle ID with
 `defaults read /Applications/<App>.app/Contents/Info.plist CFBundleIdentifier`,
 or create the rule from the focused window in OmniWM's App Rules window.
 
+### Quake Terminal
+
+`[quakeTerminal]` uses `provider = "ghostty"` (toggled with Option+`). OmniWM
+embeds its own Ghostty library, which reads the user Ghostty config in
+`~/.config/ghostty/` but has no Ghostty resources directory, so it cannot
+resolve themes bundled in `Ghostty.app`. For that reason the Catppuccin Mocha
+theme is declared in `home/xhan/common/ghostty.nix` with
+`programs.ghostty.themes` (written to `~/.config/ghostty/themes/`), and
+`theme` refers to it by that name. Relaunch OmniWM after changing the Ghostty
+config.
+
 ## Making Changes
 
 ### OmniWM Settings

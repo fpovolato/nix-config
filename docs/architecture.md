@@ -158,17 +158,24 @@ The shared alias definitions are in:
 
 On macOS, default apps for file types are declared in
 `home/xhan/darwin/file-associations.nix` as extension → bundle ID pairs
-(currently `.luau` → Zed, `dev.zed.Zed`, for OmniShell widgets). macOS has
-no declarative setting for this, so a Home Manager activation step registers
-each pair with Launch Services through `duti -s <bundle ID> <extension> all`.
-`duti` is a Homebrew formula; nix-darwin runs Homebrew before Home Manager,
-so it is installed by the time the step runs, and the step only warns if it
-is missing. Changing a default app in Finder (Get Info → Open with) lasts
-only until the next activation for declared extensions. Find a bundle ID
-with `defaults read /Applications/<App>.app/Contents/Info.plist CFBundleIdentifier`.
+(currently `luau` → Zed, `dev.zed.Zed`, for OmniShell widgets). macOS has
+no declarative setting for this, so a Home Manager activation step passes
+the pairs to `home/xhan/darwin/file-associations/set-default-apps.swift`,
+run with the Command Line Tools' `/usr/bin/swift` (about 3 s), which calls
+`NSWorkspace.setDefaultApplication(at:toOpen:)`. The step warns, without
+failing activation, if the Command Line Tools are missing or a pair cannot
+be set. `duti` was used before, but on macOS 27 Launch Services rejects it
+with error -50 for extensions no app declares (such as `.luau`), which
+macOS only knows as dynamic types. Changing a default app in Finder
+(Get Info → Open with) lasts only until the next activation for declared
+extensions. Find a bundle ID with
+`defaults read /Applications/<App>.app/Contents/Info.plist CFBundleIdentifier`.
 
-Ghostty uses the built-in `Catppuccin Mocha` theme on both hosts, declared
-through Home Manager in `home/xhan/common/ghostty.nix`.
+Ghostty uses Catppuccin Mocha on both hosts, declared through Home Manager in
+`home/xhan/common/ghostty.nix`. The theme is defined locally with
+`programs.ghostty.themes` (in `~/.config/ghostty/themes/`) rather than
+taken from Ghostty's bundled themes, so that the Ghostty embedded in OmniWM's
+quake terminal, which cannot see the bundled themes, uses it too.
 
 The cursor is a block. Ghostty's shell integration would otherwise switch it
 to a bar at the prompt, so its `cursor` feature is disabled with
