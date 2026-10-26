@@ -99,11 +99,55 @@ exists in the flake source, i.e. is tracked by Git (`builtins.pathExists`).
 individual files, so OmniWM can create and atomically replace files in it.
 
 OmniWM installs and updates `default/`, the bundled styles (`wayline`,
-`nocturne`, `lake`, `celestial`, `matrix`, `sakura`) and `omniwm.d.luau`
-there on every release. The folder's `.gitignore` is an allowlist: only
-`.gitignore`, `shell.toml` and `widgets/` are tracked. The folder stays
-mostly empty until OmniShell is used, for example by enabling the Workspace
-Bar and choosing a style in Settings > Styles & Widgets.
+`nocturne`, `lake`, `celestial`, `matrix`, `sakura`), `omniwm.d.luau` and
+`.luaurc` there when the bar is enabled and on every release. The folder's
+`.gitignore` is an allowlist: only `.gitignore`, `shell.toml` and `widgets/`
+are tracked. OmniWM creates the user `shell.toml` only when a style, palette
+or bar layout is changed from the defaults.
+
+### Bar
+
+OmniWM's Workspace Bar, drawn by OmniShell, replaces the macOS menu bar.
+In `settings.toml` (`[workspaceBar]`):
+
+- `enabled = true`, `fullWidth = true` and
+  `position = "overlappingMenuBar"`: the bar spans the top edge above the
+  native menu bar, with the shell's leading, center and trailing widget
+  groups at its start, middle and end.
+- `fullWidthNotchMode = "rightOfNotch"`: the MacBook's built-in display has a
+  notch, so the center widgets sit to its right.
+- `hideEmptyWorkspaces = true`: OmniWM has no dynamic workspaces; the nine
+  in `[[workspaces]]` always exist. This hides inactive empty ones in the bar
+  and Overview, and next/previous navigation skips them, so only occupied
+  workspaces and the current one are shown. Option+1–9 still reach any
+  workspace.
+- `reserveLayoutSpace = true`: tiled windows never go under the bar. On the
+  notched display macOS already reserves the menu-bar area, so this only
+  matters if the bar grows taller than it.
+
+While a full-width bar is enabled, OmniWM sets macOS's "Automatically hide
+and show the menu bar" to Always (`NSGlobalDomain._HIHideMenuBar`) and
+restores the previous value when the bar is disabled or OmniWM quits
+normally. After a crash, relaunch OmniWM to restore it. Do not declare
+`_HIHideMenuBar` in nix-darwin: it would fight OmniWM over the setting. App
+menus and third-party status icons are still reached by moving the pointer
+to the top edge, which reveals the native menu bar.
+
+The active OmniShell profile can override `[workspaceBar]` keys, and it wins
+over `settings.toml`. The bundled `default` profile sets
+`position = "belowMenuBar"` (and `height = 32`), which puts the bar under the
+notch. The user `shell.toml` therefore sets
+`profiles.default.workspaceBar.position = "overlappingMenuBar"`, so the bar
+sits in the menu-bar row around the notch like the native menu bar.
+`profiles.<name>.workspaceBar` in the user `shell.toml` wins over the profile
+folder's own `shell.toml` and its theme, which in turn win over
+`settings.toml`. Check `default/shell.toml` (or the active profile's folder)
+and its theme before changing a bar key in `settings.toml`.
+
+The `default` profile places the Apple menu, the active app's menus, OmniWM,
+workspaces and scratchpads on the left; the active window in the center; and
+media, notifications, volume, Wi-Fi, battery, Control Center, system stats and
+the clock on the right.
 
 ## Making Changes
 
