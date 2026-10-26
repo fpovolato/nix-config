@@ -2,6 +2,7 @@
 -- Copyright (C) 2026 OmniNull — https://github.com/OmniNull/OmniWM
 -- Copy of default/widgets/volume/init.luau without the volume percentage
 -- next to the icon. See docs/omniwm.md.
+-- Modified by xhan on 2026-10-26; remains GPL-2.0-only.
 
 
 local look = require("../lib/look")

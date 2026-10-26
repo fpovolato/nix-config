@@ -5,6 +5,10 @@
 This document describes how to bootstrap the MacBook Pro M2
 from a clean macOS installation.
 
+This guide uses the original `xhan` account and `macbook` flake output.
+For a different account, hostname or output, follow the
+[README installation guide](../../README.md#install-on-another-mac) first.
+
 The MacBook uses Nix for declarative system configuration,
 Homebrew for application installation, and Home Manager
 for user configuration.
@@ -162,7 +166,7 @@ git log -1 --oneline
 
 The working tree should be clean.
 
-The repository is currently private.
+If the repository is private, authenticate with GitHub before cloning.
 
 ## 5. Validate nix-darwin
 
@@ -189,9 +193,8 @@ Both commands must complete successfully.
 For the first installation:
 
 ```sh
-sudo nix run \
-  'nix-darwin/nix-darwin-26.05#darwin-rebuild' \
-  -- switch --flake .#macbook
+sudo "$(nix build '.#darwinConfigurations.macbook.system' --no-link --print-out-paths)/sw/bin/darwin-rebuild" \
+  switch --flake "$HOME/nix-config#macbook"
 ```
 
 The initial activation configures:

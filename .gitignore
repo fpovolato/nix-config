@@ -14,3 +14,22 @@
 
 # Secrets must remain local
 /secrets/
+
+# Private keys, credentials and local reports (public *.pub keys stay tracked).
+.ssh/
+.aws/
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+id_ecdsa
+credentials.json
+gitleaks-report.*
+
+# Local application state and editor backups.
+*.log
+*.bak
+*.swp
+*.swo
+*.pre-v*

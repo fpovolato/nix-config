@@ -88,6 +88,10 @@ through symlinks and live-reloads the file, so:
 - changes made by editing the repository file apply immediately, without
   activation.
 
+Review changes before applying a patch or switching branches in this checkout:
+these operations can affect the running application without a Nix build or
+activation. Keep secrets and private commands out of these versioned settings.
+
 The file's contents are therefore not pinned by `flake.lock`; only the link
 is. `force = true` lets Home Manager replace a regular file OmniWM wrote
 before the link existed. The link is created only while the repository file
@@ -189,7 +193,8 @@ without the percentage, which the bundled widget has no option to hide. Its
 `settings.toml` is copied too, because a user replacement does not inherit
 the bundled widget's settings schema. After an OmniWM upgrade, compare the
 copy with the new `default/widgets/volume/init.luau` and port upstream
-changes.
+changes. The copied files remain GPL-2.0-only, with their original notices;
+see [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md) and the bundled license.
 
 ### Workspaces and App Rules
 

@@ -14,6 +14,7 @@
 
     brews = [
       "git"
+      "gitleaks"
       "fish"
       "starship"
       "eza"

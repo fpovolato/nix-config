@@ -1,0 +1,6 @@
+title = "nix-config secret scanning"
+
+[extend]
+useDefault = true
+
+# No blanket path exclusions: Nix files, docs and public-key files are scanned.

@@ -38,8 +38,8 @@ in
   # Git is installed through Homebrew.
   programs.git.package = null;
 
-  # Disable automatic screen saver activation for this Mac.
-  targets.darwin.currentHostDefaults."com.apple.screensaver".idleTime = 0;
+  # Start the screen saver after five minutes of inactivity (seconds).
+  targets.darwin.currentHostDefaults."com.apple.screensaver".idleTime = 300;
 
   # Fish is installed through Homebrew.
   # Home Manager only manages its configuration.

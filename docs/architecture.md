@@ -5,8 +5,10 @@
 This project manages a NixOS desktop and a macOS laptop
 using one shared Git repository and one Nix Flake.
 
-The repository is currently private, with a possible
-future transition to public visibility.
+The repository is prepared for sharing as a personal configuration.
+See [the README](../README.md) for installation on another Mac and
+[SECURITY.md](../SECURITY.md) for publication checks. GitHub visibility is
+managed separately from this configuration.
 
 ## Hosts
 
@@ -90,15 +92,14 @@ when running. No spacer tile is needed.
 See [Apple's Dock guide](https://support.apple.com/en-gb/guide/mac-help/mh35859/mac).
 These lists replace any manually pinned items at the next activation.
 
-The MacBook stays awake with its display on during inactivity:
-`modules/darwin/defaults.nix` sets `power.sleep.computer` and
-`power.sleep.display` to `"never"`. Home Manager disables the primary user's
-automatic screen saver through
-`targets.darwin.currentHostDefaults."com.apple.screensaver".idleTime = 0`.
-This applies on battery as well as external power, increasing battery use.
-Manual locking and lid-close sleep are not disabled.
+The MacBook sleeps its display after five idle minutes and the computer after
+fifteen minutes, on battery and external power (`modules/darwin/defaults.nix`).
+Home Manager starts the screen saver after 300 idle seconds.
+`modules/darwin/security.nix` requires a password immediately after screen saver
+activation or display sleep. These settings take effect on activation; verify
+Lock Screen settings and idle behavior on the installed macOS version.
 See the [nix-darwin power options](https://nix-darwin.github.io/nix-darwin/manual/#opt-power.sleep.display)
-and [Apple's screen saver idle-time definition](https://developer.apple.com/documentation/devicemanagement/screensaveruser).
+and [Apple's screen saver properties](https://developer.apple.com/documentation/devicemanagement/screensaver).
 
 The macOS wallpaper is managed by `home/xhan/darwin/wallpaper.nix` through
 a Home Manager activation step using macOS AppKit. The PNG is versioned in
@@ -300,3 +301,16 @@ State versions should not be increased automatically.
 Keep AGENTS.md and docs updated when architecture changes.
 
 Do not document planned features as already implemented.
+
+## Repository security checks
+
+Gitleaks is installed through Homebrew on macOS and Nixpkgs on NixOS.
+`.githooks/pre-commit` scans staged changes; each clone must opt in with
+`git config --local core.hooksPath .githooks`. `scripts/check-secrets.sh`
+checks current non-ignored source files and all locally reachable history.
+The `Secret scanning` workflow runs on GitHub pushes and pull requests with
+read-only permissions and redacted output. See [SECURITY.md](../SECURITY.md).
+
+NixOS SSH explicitly disables both password and keyboard-interactive login;
+root is forbidden and the allowed account is `xhan`. The host firewall permits
+TCP port 22. Network-level restrictions are a deployment-specific decision.

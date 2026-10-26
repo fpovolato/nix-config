@@ -1,10 +1,10 @@
 { config, ... }:
 
 {
-  # Keep the Mac and its display awake when idle.
+  # Idle timeouts in minutes, on battery and external power.
   power.sleep = {
-    computer = "never";
-    display = "never";
+    computer = 15;
+    display = 5;
   };
 
   system.keyboard = {

@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+repo=$(git rev-parse --show-toplevel)
+cd "$repo"
+# Pin the policy to the index as well as the scanned content. Unstaged edits
+# to .gitleaks.toml must not silently weaken a commit's scan.
+policy=$(mktemp)
+trap 'rm -f "$policy"' EXIT HUP INT TERM
+git show :.gitleaks.toml > "$policy"
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks git --config "$policy" --pre-commit --staged --redact .
+else
+  # Project-scoped tool only; does not install a global macOS application.
+  nix shell --no-write-lock-file --inputs-from . nixpkgs#gitleaks \
+    --command gitleaks git --config "$policy" --pre-commit --staged --redact .
+fi

@@ -102,6 +102,9 @@ Build macOS without activation:
 Validate staged changes:
   git diff --cached --check
 
+Scan current files and local Git history (Gitleaks required):
+  bash scripts/check-secrets.sh
+
 Never automatically execute `nixos-rebuild switch` or
 `darwin-rebuild switch`.
 
@@ -117,7 +120,7 @@ Never automatically execute `nixos-rebuild switch` or
 
 ## Additional Documentation
 
-See `docs/architecture.md` and `docs/bootstrap/`.
+See `README.md`, `SECURITY.md`, `docs/architecture.md` and `docs/bootstrap/`.
 
 OmniWM (macOS window manager and OmniShell bar) is documented in
 `docs/omniwm.md`. Read it before changing anything related to OmniWM,
