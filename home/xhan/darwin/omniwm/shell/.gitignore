@@ -1,7 +1,6 @@
-# ~/.config/omniwm/shell links here. OmniWM installs and updates default/,
-# the bundled styles and omniwm.d.luau with each release, so only the files
-# owned by the user are tracked. Add your own profile folders below.
-# See docs/omniwm.md.
+# Only shell.toml (linked from ~/.config/omniwm/shell) and widgets/ (copied
+# there on activation) are versioned. The allowlist also keeps out files
+# OmniWM wrote here while the whole folder was linked. See docs/omniwm.md.
 /*
 !/.gitignore
 !/shell.toml

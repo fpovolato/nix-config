@@ -17,11 +17,35 @@ in
     force = true;
   };
 
-  # OmniShell folder (bar, widgets and styles), linked as a whole so OmniWM
-  # can create and replace files inside it. Its .gitignore keeps the folders
-  # OmniWM manages out of Git.
-  home.file.".config/omniwm/shell".source = config.lib.file.mkOutOfStoreSymlink
-    "${config.home.homeDirectory}/nix-config/home/xhan/darwin/omniwm/shell";
+  # ~/.config/omniwm/shell stays a real folder: OmniShell only lets widget
+  # files physically inside it use `require`, so widgets cannot be links into
+  # this repository. Only its settings file is linked, like settings.toml.
+  home.file.".config/omniwm/shell/shell.toml" = {
+    source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/nix-config/home/xhan/darwin/omniwm/shell/shell.toml";
+    force = true;
+  };
+
+  # Earlier generations linked the whole folder into the repository. Remove
+  # that link before linking shell.toml, or Home Manager would write through it.
+  home.activation.unlinkOmniwmShellFolder = lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
+    if [ -L "$HOME/.config/omniwm/shell" ]; then
+      run rm "$HOME/.config/omniwm/shell"
+    fi
+  '';
+
+  # Copy the versioned widgets into the shell folder, replacing only the
+  # widgets that exist in the repository.
+  home.activation.copyOmniwmShellWidgets = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+    widgets="$HOME/.config/omniwm/shell/widgets"
+    run mkdir -p "$widgets"
+    for widget in ${./omniwm/shell/widgets}/*/; do
+      name="$(basename "$widget")"
+      run rm -rf "$widgets/$name"
+      run cp -R "''${widget%/}" "$widgets/$name"
+      run chmod -R u+w "$widgets/$name"
+    done
+  '';
 
   # OmniWM's Command Palette uses Control+Option+Space, which macOS also binds
   # to "Select next source in Input menu" (symbolic hotkey 61). Disable only

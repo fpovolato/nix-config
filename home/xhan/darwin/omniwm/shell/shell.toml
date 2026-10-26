@@ -2,7 +2,8 @@ profile = "default"
 
 [profiles.default]
 leading = ["apple-menu", "media", "app-menu", "omniwm", "workspaces", "scratchpads"]
-trailing = ["notifications", "volume", "wifi", "battery-details", "control-center", "system-stats", "clock"]
+center = []
+trailing = ["wifi", "volume", "battery-details", "system-stats", "clock", "notifications"]
 
 [profiles.default.workspaceBar]
 position = "overlappingMenuBar"

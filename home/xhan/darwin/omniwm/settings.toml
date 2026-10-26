@@ -61,7 +61,7 @@ animationsEnabled = true
 defaultLayoutType = "niri"
 hotkeysEnabled = true
 hyperKeyModifiers = "Control+Option+Shift+Command"
-ipcEnabled = false
+ipcEnabled = true
 preventSleepEnabled = false
 systemHyperTrigger = "None"
 updateChecksEnabled = true
@@ -268,6 +268,12 @@ minHeight = 420.0
 minWidth = 500.0
 
 [[appRules]]
+assignToWorkspace = "9"
+bundleId = "net.whatsapp.WhatsApp"
+id = "6C6D95F6-83A0-426F-AE20-7CDFC4E77866"
+
+[[appRules]]
+assignToWorkspace = "8"
 bundleId = "com.spotify.client"
 id = "2DE9390B-0DB4-4D0C-9ABA-06F76F1D4EA9"
 minHeight = 600.0
@@ -1135,10 +1141,6 @@ id = "toggleShellWidget.clock"
 
 [[hotkeys]]
 binding = "Unassigned"
-id = "toggleShellWidget.control-center"
-
-[[hotkeys]]
-binding = "Unassigned"
 id = "toggleShellWidget.hidden-bar"
 
 [[hotkeys]]
@@ -1206,7 +1208,6 @@ name = "5"
 type = "main"
 
 [[workspaces]]
-displayName = "❤️"
 id = "5953F2BF-A378-4266-91B2-287174C4FA4D"
 layoutType = "niri"
 name = "6"
@@ -1215,7 +1216,6 @@ name = "6"
 type = "secondary"
 
 [[workspaces]]
-displayName = "🚀"
 id = "A7D5E104-6985-4516-8ED5-07F144F2A33D"
 layoutType = "niri"
 name = "7"
@@ -1224,6 +1224,7 @@ name = "7"
 type = "secondary"
 
 [[workspaces]]
+displayName = "♪"
 id = "0E18F6B0-345A-4078-8B21-33641F07A861"
 layoutType = "niri"
 name = "8"
@@ -1232,6 +1233,7 @@ name = "8"
 type = "main"
 
 [[workspaces]]
+displayName = "❝"
 id = "8D4D711C-2B2F-4FEC-86BF-FA952037738A"
 layoutType = "niri"
 name = "9"

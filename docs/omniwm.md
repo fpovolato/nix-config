@@ -16,7 +16,8 @@ that interact with them, and keep it up to date with such changes.
 | `modules/darwin/omniwm.nix` | nix-darwin: Homebrew cask, Spaces setting, launchd agent |
 | `home/xhan/darwin/omniwm.nix` | Home Manager: config links, macOS hotkey conflict fix |
 | `home/xhan/darwin/omniwm/settings.toml` | OmniWM settings, linked from `~/.config/omniwm/settings.toml` |
-| `home/xhan/darwin/omniwm/shell/` | OmniShell folder, linked from `~/.config/omniwm/shell` |
+| `home/xhan/darwin/omniwm/shell/shell.toml` | OmniShell settings, linked from `~/.config/omniwm/shell/shell.toml` |
+| `home/xhan/darwin/omniwm/shell/widgets/` | User widgets, copied into `~/.config/omniwm/shell/widgets/` on activation |
 | `home/xhan/darwin/omniwm/shell/.gitignore` | Allowlist of the OmniShell files tracked by Git |
 | `modules/darwin/homebrew.nix` | Homebrew cleanup policy that affects switching casks |
 
@@ -94,16 +95,37 @@ exists in the flake source, i.e. is tracked by Git (`builtins.pathExists`).
 
 ### OmniShell Folder
 
-`~/.config/omniwm/shell` is an out-of-store symlink to
-`home/xhan/darwin/omniwm/shell/`. The whole directory is linked, rather than
-individual files, so OmniWM can create and atomically replace files in it.
+`~/.config/omniwm/shell` is a real folder owned by OmniWM. OmniShell lets a
+widget call `require` only when its file is physically inside that folder: a
+widget reached through a symlink into this repository fails with
+`require is only available to widgets in the shell folder` and OmniWM falls
+back to the bundled widget. Linking the whole folder to the repository, as an
+earlier version of this configuration did, therefore broke user widgets.
+
+`home/xhan/darwin/omniwm.nix` instead:
+
+- links `~/.config/omniwm/shell/shell.toml` to
+  `home/xhan/darwin/omniwm/shell/shell.toml` (out-of-store, `force = true`),
+  like `settings.toml`;
+- copies each widget folder in `home/xhan/darwin/omniwm/shell/widgets/` (from
+  the Nix store) into `~/.config/omniwm/shell/widgets/` on activation
+  (`copyOmniwmShellWidgets`), replacing only those widgets. Widgets that exist
+  only in `~/.config` are left alone, and copies are writable but one-way;
+- removes the old folder link before Home Manager links `shell.toml`
+  (`unlinkOmniwmShellFolder`). Otherwise Home Manager keeps the old link,
+  because the new path lies inside it, and writes through it.
 
 OmniWM installs and updates `default/`, the bundled styles (`wayline`,
 `nocturne`, `lake`, `celestial`, `matrix`, `sakura`), `omniwm.d.luau` and
-`.luaurc` there when the bar is enabled and on every release. The folder's
-`.gitignore` is an allowlist: only `.gitignore`, `shell.toml` and `widgets/`
-are tracked. OmniWM creates the user `shell.toml` only when a style, palette
-or bar layout is changed from the defaults.
+`.luaurc` in `~/.config/omniwm/shell` when the bar is enabled and on every
+release. They are not versioned. The repository folder's `.gitignore` is an
+allowlist (`.gitignore`, `shell.toml`, `widgets/`) that also keeps leftovers
+from the old folder link out of Git.
+
+Check widget load errors with `omniwmctl query shell-widgets`: each widget
+reports its `state` (`loaded`, `fallback`, `failed`), `source` and `error`.
+This needs `general.ipcEnabled = true`, which is set in `settings.toml`;
+the IPC server listens on a local socket only.
 
 ### Bar
 
@@ -149,12 +171,50 @@ workspaces and scratchpads on the left; the active window in the center; and
 media, notifications, volume, Wi-Fi, battery, Control Center, system stats and
 the clock on the right.
 
-The user `shell.toml` overrides `profiles.default.leading` and
-`profiles.default.trailing` to move `media` from the right to the left,
-right after `apple-menu`: on the right, the now-playing title overlapped the
-active window's title in the center. The lists replace the profile's ones,
-so they restate the remaining default widgets in order; check them against
-`default/shell.toml` after an OmniWM upgrade.
+The user `shell.toml` overrides `profiles.default.leading`,
+`profiles.default.center` and `profiles.default.trailing`. The lists replace
+the profile's ones, so check them against `default/shell.toml` after an
+OmniWM upgrade.
+
+- Left: `media` moves right after `apple-menu`. On the right, the
+  now-playing title overlapped the active window's title in the center.
+- Center: empty (`center = []`), so the active window's title is not shown.
+- Right, in this order: `wifi`, `volume`, `battery-details`, `system-stats`,
+  `clock` (date and time; its `date` option defaults to on) and
+  `notifications`. `control-center` is left out.
+
+`widgets/volume/` replaces the bundled volume widget: its `init.luau` is a
+copy of `default/widgets/volume/init.luau` that shows only the speaker icon,
+without the percentage, which the bundled widget has no option to hide. Its
+`settings.toml` is copied too, because a user replacement does not inherit
+the bundled widget's settings schema. After an OmniWM upgrade, compare the
+copy with the new `default/widgets/volume/init.luau` and port upstream
+changes.
+
+### Workspaces and App Rules
+
+The nine workspaces in `[[workspaces]]` are labeled by their number, except:
+
+- 8: `displayName = "♪"` (U+266A), a text glyph present in system fonts.
+- 9: `displayName = "❝"` (U+275D), standing in for a speech bubble, which no
+  macOS text font has.
+
+Labels need glyphs from the bar's system font or its fallbacks. Avoid emoji,
+which render as color emoji, and Nerd Font icons: they are in the Unicode
+Private Use Area, macOS does not fall back to the Nerd Font in the bar, and
+they render as `?` (`` was tried on 9).
+
+App rules route apps to workspaces with `assignToWorkspace` (by workspace
+`name`). It applies when the app opens a window while it has no tracked
+windows; further windows open on the active workspace.
+
+- Spotify (`com.spotify.client`) → 8. This extends OmniWM's default Spotify
+  minimum-size rule rather than adding a second rule.
+- WhatsApp (`net.whatsapp.WhatsApp`) → 9.
+
+Find an app's bundle ID with
+`defaults read /Applications/<App>.app/Contents/Info.plist CFBundleIdentifier`,
+or create the rule from the focused window in OmniWM's App Rules window.
 
 ## Making Changes
 
@@ -187,13 +247,20 @@ nix eval --impure --expr 'builtins.typeOf (builtins.fromTOML (builtins.readFile 
 
 - Bar layout, style, palette and widget options live in `shell.toml`. The
   Settings window writes it too.
-- Own widgets go in `widgets/`, which takes precedence over the profiles.
-- To customize a bundled widget, eject it first (Settings > Advanced > Shell
+- Own widgets go in `home/xhan/darwin/omniwm/shell/widgets/<name>/`
+  (`init.luau`, plus `settings.toml` for its options) and take precedence over
+  the profiles. Activation copies them to `~/.config`; to try an edit without
+  activating, copy the folder there by hand, then keep the repository version
+  in sync.
+- To customize a bundled widget, eject it (Settings > Advanced > Shell
   Development > Edit Widget Source…, or `omniwmctl shell eject <widget>`),
-  which copies it into `widgets/`. Never edit `default/` or the bundled styles:
-  OmniWM replaces them on upgrade and they are not tracked.
-- To version a profile of your own, create a folder next to `shell.toml` and
-  add `!/<profile>/` to the `.gitignore`.
+  which copies it into `~/.config/omniwm/shell/widgets/`, then move that copy
+  into the repository. Never edit `default/` or the bundled styles: OmniWM
+  replaces them on upgrade and they are not tracked.
+- Profiles of your own are not versioned yet: they would need the same
+  copy-on-activation treatment as widgets.
+- After a widget change, confirm `state = "loaded"` with
+  `omniwmctl query shell-widgets`.
 - See the [OmniShell guides](https://omniwm.app/omnishell/configuration/profiles-palettes/)
   and the Luau API reference on the OmniWM website.
 
