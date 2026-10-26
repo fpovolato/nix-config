@@ -118,3 +118,8 @@ Never automatically execute `nixos-rebuild switch` or
 ## Additional Documentation
 
 See `docs/architecture.md` and `docs/bootstrap/`.
+
+OmniWM (macOS window manager and OmniShell bar) is documented in
+`docs/omniwm.md`. Read it before changing anything related to OmniWM,
+including `modules/darwin/omniwm.nix`, `home/xhan/darwin/omniwm.nix` and
+`home/xhan/darwin/omniwm/`, and update it with those changes.

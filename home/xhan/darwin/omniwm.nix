@@ -1,3 +1,4 @@
+# OmniWM user configuration. See docs/omniwm.md before changing it.
 { config, lib, ... }:
 
 let
@@ -15,6 +16,12 @@ in
     # Replace the regular file OmniWM writes before the link exists.
     force = true;
   };
+
+  # OmniShell folder (bar, widgets and styles), linked as a whole so OmniWM
+  # can create and replace files inside it. Its .gitignore keeps the folders
+  # OmniWM manages out of Git.
+  home.file.".config/omniwm/shell".source = config.lib.file.mkOutOfStoreSymlink
+    "${config.home.homeDirectory}/nix-config/home/xhan/darwin/omniwm/shell";
 
   # OmniWM's Command Palette uses Control+Option+Space, which macOS also binds
   # to "Select next source in Input menu" (symbolic hotkey 61). Disable only

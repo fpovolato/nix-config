@@ -1,0 +1,8 @@
+# ~/.config/omniwm/shell links here. OmniWM installs and updates default/,
+# the bundled styles and omniwm.d.luau with each release, so only the files
+# owned by the user are tracked. Add your own profile folders below.
+# See docs/omniwm.md.
+/*
+!/.gitignore
+!/shell.toml
+!/widgets/

@@ -71,70 +71,13 @@ macOS settings are split by purpose under `modules/darwin/`:
 - `security.nix`: authentication settings, including Touch ID for `sudo`
   through `security.pam.services.sudo_local.touchIdAuth`.
 - `homebrew.nix`: application installation.
-- `omniwm.nix`: the OmniWM tiling window manager (see below).
+- `omniwm.nix`: the OmniWM tiling window manager (see [omniwm.md](omniwm.md)).
 - `home-manager.nix`: user configuration integration.
 
-### OmniWM
-
-[OmniWM](https://omniwm.app/) tiles windows on the MacBook. It requires
-macOS 26 or later on Apple Silicon. `modules/darwin/omniwm.nix` declares:
-
-- the `omniwm` Homebrew cask, which also links `omniwmctl` into
-  `/opt/homebrew/bin`. Home Manager's `programs.omniwm` module and the
-  Nixpkgs package exist only on unstable branches and would install a Nix
-  copy, against the macOS package policy.
-- `system.defaults.spaces.spans-displays = false`, the macOS default
-  "Displays have separate Spaces". OmniWM pauses window management without it.
-- a launchd user agent, `org.nixos.omniwm`, that starts the app at login and
-  restarts it after a crash but not after Quit. Logs go to
-  `~/Library/Logs/omniwm.log` and `omniwm.err.log`. Leave OmniWM's own
-  "Start at Login" setting off, or two instances will start.
-
-OmniWM's default Command Palette shortcut, Control+Option+Space, is also the
-macOS shortcut "Select next source in Input menu". Home Manager
-(`home/xhan/darwin/omniwm.nix`) disables only that macOS entry, symbolic hotkey
-61 in `com.apple.symbolichotkeys`, using `defaults write ... -dict-add` so the
-other shortcuts are preserved, then reloads them with `activateSettings -u`.
-Control+Space (hotkey 60) still switches between the Italian - Pro and ABC
-layouts. Re-enabling the shortcut in System Settings lasts only until the next
-activation.
-
-macOS privacy permissions cannot be declared: on first launch, grant
-Accessibility and Input Monitoring (required) and optionally Screen Recording,
-then click Start OmniWM. A cask upgrade replaces the app bundle, so quit
-OmniWM before upgrading it with Homebrew.
-
-OmniWM keeps its settings in `~/.config/omniwm/settings.toml`. The versioned
-copy is `home/xhan/darwin/omniwm/settings.toml`; `home/xhan/darwin/omniwm.nix`
-makes the config path a Home Manager out-of-store symlink to that file in
-`~/nix-config`, not to a Nix store copy. OmniWM writes through symlinks, so
-the Settings window and live reload keep working: changes made in the GUI
-land in the working tree, to be reviewed with `git diff` and committed. The
-file is therefore not pinned by the flake; only the link is.
-
-The schema is strict: in a `schemaVersion = 5` file, one missing required key,
-unknown hotkey action or invalid enum value rejects the whole file and OmniWM
-runs with defaults. The file is therefore taken from OmniWM's own canonical
-output rather than written by hand. See the
-[configuration guide](https://omniwm.app/config/configuration/) and
-[settings reference](https://omniwm.app/config/settings-reference/).
-The captured file was written by OmniWM 0.7.6 with `schemaVersion = 4`; the
-online reference follows upstream `main` and already describes version 5.
-OmniWM upgrades older schema versions by rewriting the file (through the link,
-so the upgrade appears in `git diff`) after backing up the original next to
-`~/.config/omniwm/settings.toml` (for version 5, as `settings.toml.pre-v5`).
-
-The link is created only when `home/xhan/darwin/omniwm/settings.toml` is in
-the flake source, i.e. tracked by Git (`builtins.pathExists`). To capture it
-the first time:
-
-1. Activate, launch OmniWM and grant its permissions.
-2. From its menu bar icon, choose Reveal Settings File; this writes a complete
-   canonical file if none exists.
-3. Copy `~/.config/omniwm/settings.toml` to
-   `home/xhan/darwin/omniwm/settings.toml` and `git add` it.
-4. Activate again. `force = true` lets Home Manager replace OmniWM's regular
-   file with the link.
+OmniWM, the MacBook's tiling window manager, and its OmniShell bar are
+documented in [omniwm.md](omniwm.md): installation, startup, linked
+configuration files, the macOS hotkey conflict, upgrades and how to change
+its settings.
 
 The Dock hides automatically and its pinned items are ordered as Finder,
 Zen, Ghostty, System Settings, Downloads, and Trash. Finder and Trash are
@@ -303,7 +246,16 @@ this lockfile: available formula and cask versions can change.
 macOS Homebrew activation currently uses:
 - autoUpdate = false
 - upgrade = false
-- cleanup = "none"
+- cleanup = "uninstall"
+
+With `cleanup = "uninstall"`, activation runs `brew bundle --force-cleanup`:
+any formula, cask or tap not declared in `modules/darwin/homebrew.nix` (or
+another module adding to `homebrew.*`) is uninstalled, so packages installed
+manually with `brew install` disappear at the next activation unless they are
+declared. Dependencies of declared formulae are kept. Cleanup runs only after
+every declared package installed successfully. `"zap"` is deliberately not
+used: it also trashes each removed cask's data, which for OmniWM includes
+`~/.config/omniwm` and its links into this repository.
 
 State versions should not be increased automatically.
 

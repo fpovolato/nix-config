@@ -1,3 +1,4 @@
+# OmniWM system configuration. See docs/omniwm.md before changing it.
 { config, ... }:
 
 let
@@ -6,7 +7,11 @@ in
 {
   # OmniWM tiling window manager, installed as a Homebrew cask.
   # The cask also links `omniwmctl` into /opt/homebrew/bin.
-  homebrew.casks = [ "omniwm" ];
+  # Canary (daily builds of main) is needed for OmniShell, which is not in a
+  # stable release yet. It conflicts with the stable `omniwm` cask; Homebrew
+  # cleanup runs only after a successful install, so remove the other cask by
+  # hand before switching.
+  homebrew.casks = [ "omniwm@canary" ];
 
   # OmniWM pauses window management unless each display has its own Spaces.
   # This is the macOS default; it is declared here to keep it that way.

@@ -51,7 +51,10 @@
     onActivation = {
       autoUpdate = false;
       upgrade = false;
-      cleanup = "none";
+      # Uninstall formulae and casks missing from this file, after installing
+      # the listed ones. "zap" is avoided: it would also trash app data such as
+      # ~/.config/omniwm, which links into this repository.
+      cleanup = "uninstall";
     };
   };
 }
