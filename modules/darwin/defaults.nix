@@ -17,15 +17,14 @@
 
   system.defaults.dock = {
     autohide = true;
-    show-recents = false;
+    # Use the native divider around the recent applications section.
+    show-recents = true;
 
     # Finder and Trash are provided by macOS at either end of the Dock.
     persistent-apps = [
       "/Applications/Zen.app"
       "/Applications/Ghostty.app"
       "/System/Applications/System Settings.app"
-      # Separate pinned apps from other running apps with a narrow gap.
-      { spacer = { small = true; }; }
     ];
 
     persistent-others = [

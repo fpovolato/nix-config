@@ -69,11 +69,12 @@ macOS settings are split by purpose under `modules/darwin/`:
 The Dock hides automatically and its pinned items are ordered as Finder,
 Zen, Ghostty, System Settings, Downloads, and Trash. Finder and Trash are
 fixed macOS items; the applications and Downloads are managed through
-`persistent-apps` and `persistent-others`. Recent applications are disabled.
-Other running applications can still appear temporarily in the Dock.
-A small spacer after System Settings visually separates pinned apps from
-other running apps. It is an empty gap, not a divider line; pinned apps
-remain in their original positions when running.
+`persistent-apps` and `persistent-others`. Recent applications are enabled
+with `show-recents = true` to display the native divider after pinned apps.
+This section can include recently used apps that have already been closed;
+it is not restricted to running apps. Pinned apps retain their positions
+when running. No spacer tile is needed.
+See [Apple's Dock guide](https://support.apple.com/en-gb/guide/mac-help/mh35859/mac).
 These lists replace any manually pinned items at the next activation.
 
 The MacBook stays awake with its display on during inactivity:
@@ -94,6 +95,15 @@ iCloud Wallpapers folder; later changes to that original are not synchronized.
 Activation sets the wallpaper on currently connected screens in the user's
 graphical session. Additional Spaces or screens connected later may require
 another activation. Dry-run activation does not change the wallpaper.
+
+The AppKit API only sets the desktop image, so the lock screen keeps the
+macOS default. Activation therefore also rewrites the `Idle` and `Linked`
+choices in `~/Library/Application Support/com.apple.wallpaper/Store/Index.plist`
+to the same image and restarts `WallpaperAgent`. It also copies the image to
+`/Library/Caches/Desktop Pictures/<user UUID>/lockscreen.png`, used by the
+login window before unlocking. That store format is undocumented by Apple and
+may change in future macOS releases; if it does, only the lock screen step
+should be affected.
 
 After activation, log out and back in if the menu bar has not refreshed.
 Touch ID requires an enrolled fingerprint. To check it from a local terminal,
@@ -135,6 +145,20 @@ The shared alias definitions are in:
 
 Ghostty uses the built-in `Catppuccin Mocha` theme on both hosts, declared
 through Home Manager in `home/xhan/common/ghostty.nix`.
+
+The cursor is a block. Ghostty's shell integration would otherwise switch it
+to a bar at the prompt, so its `cursor` feature is disabled with
+`shell-integration-features = no-cursor`; the other features keep their
+defaults. Programs can still request another style with escape sequences.
+
+An animated cursor trail is drawn by a custom shader,
+`home/xhan/common/ghostty/cursor-trail.glsl`, loaded from the Nix store with
+`custom-shader`. It uses Ghostty's cursor uniforms (`iCurrentCursor`,
+`iPreviousCursor`, `iTimeCursorChange`; Ghostty 1.2 or later) and only shows
+on moves longer than 1.5 line heights, so normal typing is not smeared.
+Duration, distance threshold and opacity are constants at the top of the file.
+Shader compile errors do not fail config validation; they appear only in
+Ghostty's log, and the terminal then renders without the shader.
 
 On macOS, Home Manager generates Fish alias configuration
 without installing another copy of Fish.
