@@ -51,8 +51,10 @@ GitHub Actions checks pushes and pull requests with a full-history checkout,
 read-only repository permissions and no persisted checkout credentials.
 Gitleaks 8.30.1 is downloaded with a fixed SHA-256 checksum; the checkout action
 is pinned to a commit. Update versions and verified checksums together.
-The CI job is named `gitleaks`; making it a required check needs a GitHub
-branch rule and is not configured by merely adding this workflow.
+The CI job is named `gitleaks`. A GitHub branch protection rule on `main`,
+configured in the repository settings rather than by this workflow, requires
+it to pass before pull requests merge and blocks force pushes and deletion.
+Administrators are exempt, so the maintainer can still push directly.
 
 Scanners do not detect every secret or personal identifier. Review diffs,
 authors, commit messages, image metadata, generated files and application state.
