@@ -222,6 +222,17 @@ Find an app's bundle ID with
 `defaults read /Applications/<App>.app/Contents/Info.plist CFBundleIdentifier`,
 or create the rule from the focused window in OmniWM's App Rules window.
 
+### Shortcut Pause
+
+Most hotkeys use Option, which apps with dense shortcut maps (DaVinci
+Resolve) also use. `toggleShortcutPause` is bound to `Hyper+P`
+(Control+Option+Shift+Command+P, the `hyperKeyModifiers` set): it suspends
+OmniWM's hotkeys while tiling and the bar keep running, and the same chord
+resumes them. `pauseTimeoutSeconds` is not set, so a pause lasts until it is
+toggled again. `systemHyperTrigger = "None"`, so all four modifiers must be
+held. The pause can also be toggled with
+`omniwmctl command toggle-shortcut-pause`.
+
 ### Quake Terminal
 
 `[quakeTerminal]` uses `provider = "ghostty"` (toggled with Option+`). OmniWM

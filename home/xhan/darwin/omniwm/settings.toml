@@ -1033,7 +1033,7 @@ binding = "Unassigned"
 id = "mediaPrevious"
 
 [[hotkeys]]
-binding = "Unassigned"
+binding = "Hyper+P"
 id = "toggleShortcutPause"
 
 [[hotkeys]]
