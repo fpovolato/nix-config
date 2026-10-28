@@ -49,6 +49,8 @@
       # Browsers
       "zen"
       "helium-browser"
+      # The "chromium" cask is disabled (fails the Gatekeeper check).
+      "ungoogled-chromium"
     ];
 
     onActivation = {

@@ -6,6 +6,7 @@
     ./common/fish.nix
     ./common/git.nix
     ./common/nix-tools.nix
+    ./linux/chromium.nix
     ./linux/ghostty.nix
   ];
 
