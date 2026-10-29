@@ -34,8 +34,8 @@ for an agent to understand the setup, change it and validate the result.
 | | NixOS desktop | MacBook |
 | --- | --- | --- |
 | **System** | NixOS · `x86_64-linux` | nix-darwin · `aarch64-darwin` |
-| **Window manager** | Hyprland | yabai + skhd.zig + SketchyBar |
-| **Terminal** | Ghostty | Ghostty |
+| **Window manager** | Hyprland | OmniWM + OmniShell |
+| **Terminal** | Ghostty | Ghostty + embedded quake terminal |
 | **Shell & prompt** | Fish + Starship | Fish + Starship |
 | **Theme** | Catppuccin Mocha | Catppuccin Mocha |
 | **Applications** | Nixpkgs | Homebrew via nix-homebrew |
@@ -58,8 +58,8 @@ for an agent to understand the setup, change it and validate the result.
 ### macOS desktop
 
 - [x] Homebrew applications managed through nix-darwin and nix-homebrew.
-- [x] yabai tiling with skhd.zig hotkeys, disabled while DaVinci Resolve is focused.
-- [x] SketchyBar status bar in place of the macOS menu bar.
+- [x] OmniWM tiling, workspace rules and an embedded Ghostty quake terminal.
+- [x] OmniShell bar with a customized volume widget.
 - [x] Declarative Dock, Finder, keyboard and default file association settings.
 - [x] Custom wallpaper and fastfetch artwork.
 - [x] Touch ID for sudo, idle screen saver and immediate password requirement.
@@ -102,6 +102,8 @@ with no fixed delivery schedule.
   on another machine.
 - [ ] Add Nix evaluation and build checks to CI alongside secret scanning.
 - [ ] Add a NixOS bootstrap guide covering hardware generation and disk layout.
+- [ ] Support versioned custom OmniShell profiles, extending the existing
+  copy-on-activation approach used for widgets.
 - [ ] Document rollback and recovery for failed Nix activations and Homebrew
   upgrades, including their different recovery mechanisms.
 
@@ -112,7 +114,8 @@ settings; `nil` and `nixd` are the documented Nix-installed tool exceptions.
 > [!IMPORTANT]
 > Adapt this configuration before activating it. Review the application list,
 > Homebrew cleanup policy, keyboard shortcuts and account settings. The Mac
-> setup targets **Apple Silicon**; Intel Macs are not validated here.
+> setup targets **Apple Silicon with macOS 26 or later** because of OmniWM;
+> Intel Macs are not validated here.
 
 ## Built for humans and coding agents
 
@@ -138,7 +141,9 @@ For example, a request can be as simple as:
 
 System activation and commits require explicit authorization under the project
 instructions. These are workflow rules, not a sandbox: configure the agent's
-permissions separately.
+permissions separately. OmniWM's live-linked settings are an exception to the
+usual build-and-activate workflow; editing them can affect the running app
+immediately, as explained in [the OmniWM guide](docs/omniwm.md).
 
 ## Repository layout
 
@@ -165,8 +170,8 @@ permissions separately.
 ## Install on another Mac
 
 The commands below use macOS's default Zsh. Replace the example values with
-your own. Keep the checkout at `~/nix-config`: shell helpers currently expect
-that location.
+your own. Keep the checkout at `~/nix-config`: shell helpers and OmniWM links
+currently expect that location.
 
 ### 1. Prepare the Mac
 
@@ -325,7 +330,8 @@ replacement: the repository also configures a separate Linux machine.
 | `home/xhan/darwin/default.nix` | If renaming the output, change `darwinConfigurations.macbook.system` to `darwinConfigurations.laptop.system` in `buildCommand`, and `#macbook` to `#laptop` in `switchCommand`. |
 
 The directories `hosts/macbook/` and `home/xhan/` are source paths, not account
-names. Leave them as they are; renaming them also requires updating imports.
+names. Leave them as they are; renaming them also requires updating imports
+and the source-tree paths in `home/xhan/darwin/omniwm.nix`.
 
 Set your own Git identity too. To override the shared defaults **only on this
 Mac**, add this at the top level of `home/xhan/darwin/default.nix` (which already
@@ -363,11 +369,10 @@ private SSH key into either repository.
   idle sleep. Display sleep is five minutes and computer sleep fifteen minutes.
 - Screen saver activation is five minutes; password requirement is immediate.
   Verify these settings in System Settings after activation.
-- yabai and skhd.zig need Accessibility permission and are started once by
-  hand. yabai's scripting addition needs SIP partially disabled, and
-  activation writes a password-less sudoers rule for it. SketchyBar hides the
-  macOS menu bar. Read [docs/yabai.md](docs/yabai.md) before enabling or
-  changing them.
+- OmniWM is a canary build with Accessibility and Input Monitoring permissions.
+  Read [docs/omniwm.md](docs/omniwm.md) before enabling or changing it.
+- OmniWM's settings are live links into this checkout. Editing those files or
+  checking out another revision can change the running app without a rebuild.
 - Wallpaper and default file associations are applied by activation scripts.
 
 ### 7. Validate, then activate explicitly
@@ -395,9 +400,9 @@ sudo "$(nix build '.#darwinConfigurations.laptop.system' --no-link --print-out-p
 ```
 
 This first activation installs apps and changes macOS settings. It may take
-time and request credentials. After activation, reopen the terminal, start
-yabai and skhd as described in [docs/yabai.md](docs/yabai.md) and grant
-their permissions. Check:
+time and request credentials. After activation, reopen the terminal, launch
+OmniWM and grant its required permissions. Optional Screen Recording enables
+captured visuals. Check:
 
 ```sh
 command -v darwin-rebuild fish gitleaks nil nixd
@@ -429,7 +434,7 @@ In an interactive Fish shell, `bswitch` expands to build and then activate the
 configured host. `update` updates the flake and rebuilds; on macOS it also runs
 `brew update` and `brew upgrade --greedy` before activation. Review changes
 before using these commands. Earlier updates are not rolled back if a later
-step fails.
+step fails. Quit OmniWM before upgrading its app bundle.
 
 To validate the repository's original outputs without activation:
 
@@ -448,12 +453,14 @@ file describes the maintainer's disks; do not reuse its UUIDs on another PC.
 
 - [Architecture](docs/architecture.md)
 - [Original MacBook bootstrap](docs/bootstrap/macbook.md)
-- [yabai, skhd.zig and SketchyBar](docs/yabai.md)
+- [OmniWM and live configuration](docs/omniwm.md)
+- [SketchyBar (candidate status bar)](docs/sketchybar.md)
 - [Security and publication](SECURITY.md)
 - [Agent instructions](AGENTS.md)
 
 Original work is [MIT-licensed](LICENSE). Third-party files retain their own
-licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), including the
+GPL-2.0-only OmniWM widget.
 
 Official references: [Nix](https://nix.dev/),
 [nix-darwin](https://nix-darwin.github.io/nix-darwin/manual/),

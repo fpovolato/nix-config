@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# SketchyBar configuration, Catppuccin Mocha. See docs/yabai.md.
+# SketchyBar configuration, Catppuccin Mocha. See docs/sketchybar.md.
 
 PLUGINS="$CONFIG_DIR/plugins"
 
@@ -11,7 +11,6 @@ MAUVE=0xffcba6f7
 
 FONT="JetBrainsMono Nerd Font"
 
-# The height must match `external_bar` in yabairc.
 sketchybar --bar height=32 \
                  position=top \
                  color=$BASE \
@@ -29,20 +28,6 @@ sketchybar --default icon.font="$FONT:Bold:14.0" \
                      label.padding_left=4 \
                      label.padding_right=4
 
-# Mission Control Spaces 1-9; clicking an item focuses its Space.
-for sid in 1 2 3 4 5 6 7 8 9; do
-  sketchybar --add space space.$sid left \
-             --set space.$sid space=$sid \
-                              icon=$sid \
-                              icon.highlight_color=$BASE \
-                              background.color=$MAUVE \
-                              background.corner_radius=6 \
-                              background.height=22 \
-                              background.drawing=off \
-                              script="$PLUGINS/space.sh" \
-                              click_script="yabai -m space --focus $sid"
-done
-
 sketchybar --add item front_app left \
            --set front_app icon.drawing=off \
                            label.color=$MAUVE \
@@ -56,12 +41,16 @@ sketchybar --add item clock right \
            --add item volume right \
            --set volume script="$PLUGINS/volume.sh" \
            --subscribe volume volume_change \
+           --add item wifi right \
+           --set wifi script="$PLUGINS/wifi.sh" \
+                      click_script="open 'x-apple.systempreferences:com.apple.wifi-settings-extension'" \
+           --subscribe wifi wifi_change system_woke \
            --add item battery right \
            --set battery update_freq=120 \
                          script="$PLUGINS/battery.sh" \
            --subscribe battery system_woke power_source_change
 
-sketchybar --add bracket status clock volume battery \
+sketchybar --add bracket status clock volume wifi battery \
            --set status background.color=$SURFACE0 \
                         background.corner_radius=6 \
                         background.height=24

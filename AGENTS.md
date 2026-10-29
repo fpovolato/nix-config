@@ -124,8 +124,12 @@ Never automatically execute `nixos-rebuild switch` or
 
 See `README.md`, `SECURITY.md`, `docs/architecture.md` and `docs/bootstrap/`.
 
-yabai (macOS window manager), skhd.zig (its hotkeys) and SketchyBar (status
-bar) are documented in `docs/yabai.md`. Read it before changing
-`modules/darwin/yabai.nix`, `home/xhan/darwin/yabai.nix`,
-`home/xhan/darwin/yabai/` or `home/xhan/darwin/sketchybar/`, and update it
-with those changes.
+OmniWM (macOS window manager and OmniShell bar) is documented in
+`docs/omniwm.md`. Read it before changing anything related to OmniWM,
+including `modules/darwin/omniwm.nix`, `home/xhan/darwin/omniwm.nix` and
+`home/xhan/darwin/omniwm/`, and update it with those changes.
+
+SketchyBar (a candidate status bar, installed but not started) is documented
+in `docs/sketchybar.md`. Read it before changing
+`modules/darwin/sketchybar.nix`, `home/xhan/darwin/sketchybar.nix` or
+`home/xhan/darwin/sketchybar/`, and update it with those changes.

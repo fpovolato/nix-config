@@ -71,16 +71,9 @@ any genuine false positive.
   computer sleep is fifteen minutes. The password grace period is zero.
   Validate behavior on the installed macOS version after activation.
 - FileVault must be enabled separately; this flake does not enforce it.
-- yabai and skhd.zig have Accessibility permission (skhd.zig possibly Input
-  Monitoring too), so they can read key presses and control windows. skhd
-  runs the shell commands in `home/xhan/darwin/yabai/skhdrc`.
-- yabai's scripting addition requires SIP to be partially disabled
-  (filesystem, debugging and NVRAM protections) and the `-arm64e_preview_abi`
-  boot argument, which weakens macOS's protection against code injection.
-  Activation writes `/private/etc/sudoers.d/yabai`, letting the primary user
-  run `/opt/homebrew/bin/yabai --load-sa` as root without a password; the
-  rule pins the binary's SHA-256, refreshed on every activation. See
-  [docs/yabai.md](docs/yabai.md).
+- OmniWM configuration is linked to the working tree and reloads live. Review
+  patches and branch changes before applying them to a checkout used by the
+  running application. See [docs/omniwm.md](docs/omniwm.md).
 
 ## Before making a repository public
 

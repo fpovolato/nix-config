@@ -58,8 +58,8 @@
       autoUpdate = false;
       upgrade = false;
       # Uninstall formulae and casks missing from this file, after installing
-      # the listed ones. "zap" is avoided: it would also trash the app data of
-      # every removed cask.
+      # the listed ones. "zap" is avoided: it would also trash app data such as
+      # ~/.config/omniwm, which links into this repository.
       cleanup = "uninstall";
     };
   };

@@ -74,14 +74,15 @@ macOS settings are split by purpose under `modules/darwin/`:
 - `security.nix`: authentication settings, including Touch ID for `sudo`
   through `security.pam.services.sudo_local.touchIdAuth`.
 - `homebrew.nix`: application installation.
-- `yabai.nix`: the yabai window manager, skhd.zig hotkeys and SketchyBar
-  (see [yabai.md](yabai.md)).
+- `omniwm.nix`: the OmniWM tiling window manager (see [omniwm.md](omniwm.md)).
+- `sketchybar.nix`: SketchyBar, a candidate status bar installed but not
+  started (see [sketchybar.md](sketchybar.md)).
 - `home-manager.nix`: user configuration integration.
 
-yabai, the MacBook's tiling window manager, skhd.zig, which binds its
-hotkeys, and the SketchyBar status bar are documented in
-[yabai.md](yabai.md): installation, SIP and the scripting addition, services,
-permissions, the DaVinci Resolve exclusion and the hotkeys.
+OmniWM, the MacBook's tiling window manager, and its OmniShell bar are
+documented in [omniwm.md](omniwm.md): installation, startup, linked
+configuration files, the macOS hotkey conflict, upgrades and how to change
+its settings.
 
 The Dock hides automatically and its pinned items are ordered as Finder,
 Zen, Ghostty, System Settings, Downloads, and Trash. Finder and Trash are
@@ -161,8 +162,8 @@ The shared alias definitions are in:
 
 On macOS, default apps for file types are declared in
 `home/xhan/darwin/file-associations.nix` as extension → bundle ID pairs
-(currently none; the activation step is skipped while the set is empty).
-macOS has no declarative setting for this, so a Home Manager activation step passes
+(currently `luau` → Zed, `dev.zed.Zed`, for OmniShell widgets). macOS has
+no declarative setting for this, so a Home Manager activation step passes
 the pairs to `home/xhan/darwin/file-associations/set-default-apps.swift`,
 run with the Command Line Tools' `/usr/bin/swift` (about 3 s), which calls
 `NSWorkspace.setDefaultApplication(at:toOpen:)`. The step warns, without
@@ -177,8 +178,8 @@ extensions. Find a bundle ID with
 Ghostty uses Catppuccin Mocha on both hosts, declared through Home Manager in
 `home/xhan/common/ghostty.nix`. The theme is defined locally with
 `programs.ghostty.themes` (in `~/.config/ghostty/themes/`) rather than
-taken from Ghostty's bundled themes, so it does not depend on the themes
-shipped with a given Ghostty build.
+taken from Ghostty's bundled themes, so that the Ghostty embedded in OmniWM's
+quake terminal, which cannot see the bundled themes, uses it too.
 
 The cursor is a block. Ghostty's shell integration would otherwise switch it
 to a bar at the prompt, so its `cursor` feature is disabled with
@@ -298,8 +299,8 @@ another module adding to `homebrew.*`) is uninstalled, so packages installed
 manually with `brew install` disappear at the next activation unless they are
 declared. Dependencies of declared formulae are kept. Cleanup runs only after
 every declared package installed successfully. `"zap"` is deliberately not
-used: it also trashes each removed cask's data, such as application settings
-in `~/.config` or `~/Library`.
+used: it also trashes each removed cask's data, which for OmniWM includes
+`~/.config/omniwm` and its links into this repository.
 
 State versions should not be increased automatically.
 

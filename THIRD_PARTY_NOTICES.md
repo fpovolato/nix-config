@@ -4,6 +4,16 @@ The repository's original configuration, scripts and documentation are licensed
 under [MIT](LICENSE), copyright (c) 2026 xhan. The following exceptions and
 third-party notices apply; the root license does not replace their terms.
 
+## OmniWM volume widget
+
+`home/xhan/darwin/omniwm/shell/widgets/volume/init.luau` and `settings.toml`
+are derived from [OmniWM](https://github.com/OmniNull/OmniWM),
+copyright (C) 2026 OmniNull, under **GPL-2.0-only**.
+The original copyright and SPDX notices are retained in those files.
+A complete license copy is in [LICENSES/GPL-2.0-only.txt](LICENSES/GPL-2.0-only.txt).
+The local modification removes the volume percentage beside the icon;
+see [the OmniWM guide](docs/omniwm.md). These sources remain under GPL-2.0-only.
+
 ## Catppuccin theme
 
 The Catppuccin Mocha palette in `home/xhan/common/ghostty.nix` was copied
