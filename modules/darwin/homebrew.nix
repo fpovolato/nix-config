@@ -30,10 +30,14 @@
       "mkcert"
     ];
 
+    # ZenNotes is not in homebrew/cask; its official tap provides it.
+    taps = [ "zennotes/tap" ];
+
     casks = [
       # Normie Apps
       "spotify"
       "obsidian"
+      "zennotes/tap/zennotes"
 
       # Content Creation
       "artcraft-launcher"
