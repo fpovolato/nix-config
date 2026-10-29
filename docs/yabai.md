@@ -156,8 +156,10 @@ and adjust both files. Add other apps with conflicting shortcuts the same way.
 Option + Left/Right also move by word in text fields; those keys are taken
 by skhd outside blacklisted apps.
 
-Spaces are not created automatically: create nine in Mission Control.
-Spotify and WhatsApp are sent to Spaces 8 and 9.
+At startup `yabairc` creates Spaces (with `jq` counting the existing ones)
+until there are nine in total, on the focused display. This needs the
+scripting addition; without it, create them in Mission Control. yabai never
+removes Spaces. Spotify and WhatsApp are sent to Spaces 8 and 9.
 
 ## SketchyBar
 

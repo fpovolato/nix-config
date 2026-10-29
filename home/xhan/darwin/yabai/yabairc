@@ -10,6 +10,15 @@ export PATH="/opt/homebrew/bin:$PATH"
 yabai -m signal --add event=dock_did_restart action="sudo /opt/homebrew/bin/yabai --load-sa"
 sudo /opt/homebrew/bin/yabai --load-sa
 
+# Create Spaces until there are nine, for the hotkeys and the Space rules
+# below. New Spaces go on the focused display. Without the scripting
+# addition the first creation fails and the loop stops.
+count="$(yabai -m query --spaces | jq length)"
+while [ "$count" -lt 9 ]; do
+  yabai -m space --create || break
+  count=$((count + 1))
+done
+
 # Tile new windows; the default layout is float.
 yabai -m config layout bsp
 yabai -m config window_placement second_child
@@ -30,7 +39,7 @@ yabai -m rule --add app="^(DaVinci )?Resolve$" manage=off
 # Settings windows do not tile well.
 yabai -m rule --add app="^System Settings$" manage=off
 
-# Fixed Spaces for some apps. The Spaces must exist (Mission Control).
+# Fixed Spaces for some apps.
 yabai -m rule --add app="^Spotify$" space=8
 yabai -m rule --add app="^WhatsApp$" space=9
 
