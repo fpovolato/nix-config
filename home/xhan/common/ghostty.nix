@@ -4,9 +4,8 @@
   programs.ghostty = {
     enable = true;
 
-    # Installed under ~/.config/ghostty/themes so embedded Ghostty (the
-    # OmniWM quake terminal), which has no resources dir and cannot see the
-    # bundled themes, resolves it too. Copied from Ghostty's bundled theme.
+    # Installed under ~/.config/ghostty/themes, so it does not depend on the
+    # themes bundled with Ghostty. Copied from Ghostty's bundled theme.
     themes.catppuccin-mocha = {
       palette = [
         "0=#45475a"

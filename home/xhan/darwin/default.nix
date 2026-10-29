@@ -25,8 +25,8 @@ in
     ./fastfetch.nix
     ./file-associations.nix
     ./ghostty.nix
-    ./omniwm.nix
     ./wallpaper.nix
+    ./yabai.nix
   ];
 
   home = {

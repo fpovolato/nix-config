@@ -1,0 +1,38 @@
+#!/usr/bin/env sh
+# yabai configuration, run by yabai at startup. See docs/yabai.md.
+
+# The launchd service does not inherit the Homebrew PATH.
+export PATH="/opt/homebrew/bin:$PATH"
+
+# Load the scripting addition (needs SIP partially disabled and the sudoers
+# rule written by modules/darwin/yabai.nix), and again whenever the Dock
+# restarts, which unloads it.
+yabai -m signal --add event=dock_did_restart action="sudo /opt/homebrew/bin/yabai --load-sa"
+sudo /opt/homebrew/bin/yabai --load-sa
+
+# Tile new windows; the default layout is float.
+yabai -m config layout bsp
+yabai -m config window_placement second_child
+
+yabai -m config top_padding 8
+yabai -m config bottom_padding 8
+yabai -m config left_padding 8
+yabai -m config right_padding 8
+yabai -m config window_gap 8
+
+# Leave room for SketchyBar (its height in sketchybarrc) on every display.
+yabai -m config external_bar all:32:0
+
+# Never manage DaVinci Resolve: its windows and panels keep their own size
+# and position. skhd ignores its key presses too (see skhdrc).
+yabai -m rule --add app="^(DaVinci )?Resolve$" manage=off
+
+# Settings windows do not tile well.
+yabai -m rule --add app="^System Settings$" manage=off
+
+# Fixed Spaces for some apps. The Spaces must exist (Mission Control).
+yabai -m rule --add app="^Spotify$" space=8
+yabai -m rule --add app="^WhatsApp$" space=9
+
+# Apply the rules to windows that were open before yabai started.
+yabai -m rule --apply
