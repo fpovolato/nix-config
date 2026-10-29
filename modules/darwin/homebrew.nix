@@ -27,6 +27,7 @@
       "neovim"
       "tmux"
       "fastfetch"
+      "mkcert"
     ];
 
     casks = [
