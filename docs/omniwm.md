@@ -155,7 +155,13 @@ While a full-width bar is enabled, OmniWM sets macOS's "Automatically hide
 and show the menu bar" to Always (`NSGlobalDomain._HIHideMenuBar`) and
 restores the previous value when the bar is disabled or OmniWM quits
 normally. After a crash, relaunch OmniWM to restore it. Do not declare
-`_HIHideMenuBar` in nix-darwin: it would fight OmniWM over the setting. App
+`_HIHideMenuBar` in nix-darwin: it would fight OmniWM over the setting.
+nix-darwin also never resets a default it no longer declares, so a value left
+by an earlier configuration (the yabai setup declared `true`) stays, and
+OmniWM restores it on quit. If the menu bar stays hidden without OmniWM,
+quit OmniWM and set "Automatically hide and show the menu bar" to Never in
+System Settings > Control Center, or run
+`osascript -e 'tell application "System Events" to set autohide menu bar of dock preferences to false'`. App
 menus and third-party status icons are still reached by moving the pointer
 to the top edge, which reveals the native menu bar.
 

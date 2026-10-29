@@ -6,7 +6,7 @@ tabRailAppIcons = false
 
 [borders]
 enabled = true
-width = 1.0
+width = 2.0
 
 [borders.color]
 alpha = 1.0
@@ -47,13 +47,13 @@ raiseOnMouseFocus = false
 
 [gaps]
 fullscreenUsesOuterGaps = false
-size = 0.0
+size = 5.0
 
 [gaps.outer]
-bottom = 0.0
-left = 0.0
-right = 0.0
-top = 0.0
+bottom = 5.0
+left = 5.0
+right = 5.0
+top = 6.0
 
 [general]
 animationSpeed = 1.0
