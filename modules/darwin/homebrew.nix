@@ -50,6 +50,7 @@
       # Coding
       "chatgpt"
       "claude"
+      "claude-code"
       "zed"
 
       # Browsers
