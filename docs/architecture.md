@@ -84,6 +84,16 @@ documented in [omniwm.md](omniwm.md): installation, startup, linked
 configuration files, the macOS hotkey conflict, upgrades and how to change
 its settings.
 
+Raycast replaces Spotlight as the launcher. The `raycast` cask installs it,
+and the Home Manager activation step `disableSpotlightHotkey` in
+`home/xhan/darwin/raycast.nix` disables "Show Spotlight search" (symbolic
+hotkey 64, Command+Space) with `defaults write com.apple.symbolichotkeys
+AppleSymbolicHotKeys -dict-add`, then reloads the hotkeys with
+`activateSettings -u`. Spotlight indexing and the Finder search window
+(Command+Option+Space) are unchanged. Raycast's own hotkey is stored in its
+database, not in this repository: set it to Command+Space during Raycast's
+onboarding or in its settings.
+
 The Dock hides automatically and its pinned items are ordered as Finder,
 Zen, Ghostty, System Settings, Downloads, and Trash. Finder and Trash are
 fixed macOS items; the applications and Downloads are managed through

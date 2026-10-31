@@ -26,6 +26,7 @@ in
     ./file-associations.nix
     ./ghostty.nix
     ./omniwm.nix
+    ./raycast.nix
     ./sketchybar.nix
     ./wallpaper.nix
   ];

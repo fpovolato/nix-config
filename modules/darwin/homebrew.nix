@@ -39,6 +39,8 @@
       "spotify"
       "obsidian"
       "zennotes/tap/zennotes"
+      # Launcher replacing Spotlight (see home/xhan/darwin/raycast.nix).
+      "raycast"
 
       # Content Creation
       "artcraft-launcher"
