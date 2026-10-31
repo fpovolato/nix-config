@@ -26,6 +26,7 @@
       "fzf"
       "neovim"
       "tmux"
+      "tuios"
       "fastfetch"
       "mkcert"
     ];
