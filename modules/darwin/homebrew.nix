@@ -41,6 +41,8 @@
       "zennotes/tap/zennotes"
       # Launcher replacing Spotlight (see home/xhan/darwin/raycast.nix).
       "raycast"
+      # Menu bar toolkit: keep-awake, system monitor and volume mixer.
+      "vorssaint"
 
       # Content Creation
       "artcraft-launcher"
