@@ -22,10 +22,10 @@ in
     ../common/fish.nix
     ../common/git.nix
     ../common/nix-tools.nix
+    ./aerospace.nix
     ./fastfetch.nix
     ./file-associations.nix
     ./ghostty.nix
-    ./omniwm.nix
     ./raycast.nix
     ./sketchybar.nix
     ./wallpaper.nix

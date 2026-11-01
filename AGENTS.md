@@ -124,10 +124,10 @@ Never automatically execute `nixos-rebuild switch` or
 
 See `README.md`, `SECURITY.md`, `docs/architecture.md` and `docs/bootstrap/`.
 
-OmniWM (macOS window manager and OmniShell bar) is documented in
-`docs/omniwm.md`. Read it before changing anything related to OmniWM,
-including `modules/darwin/omniwm.nix`, `home/xhan/darwin/omniwm.nix` and
-`home/xhan/darwin/omniwm/`, and update it with those changes.
+AeroSpace (macOS window manager) is documented in `docs/aerospace.md`.
+Read it before changing `modules/darwin/aerospace.nix`,
+`home/xhan/darwin/aerospace.nix` or `home/xhan/darwin/aerospace/`, and
+update it with those changes.
 
 SketchyBar (a candidate status bar, installed but not started) is documented
 in `docs/sketchybar.md`. Read it before changing

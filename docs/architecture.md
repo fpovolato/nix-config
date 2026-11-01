@@ -74,15 +74,14 @@ macOS settings are split by purpose under `modules/darwin/`:
 - `security.nix`: authentication settings, including Touch ID for `sudo`
   through `security.pam.services.sudo_local.touchIdAuth`.
 - `homebrew.nix`: application installation.
-- `omniwm.nix`: the OmniWM tiling window manager (see [omniwm.md](omniwm.md)).
+- `aerospace.nix`: the AeroSpace tiling window manager (see [aerospace.md](aerospace.md)).
 - `sketchybar.nix`: SketchyBar, a candidate status bar installed but not
   started (see [sketchybar.md](sketchybar.md)).
 - `home-manager.nix`: user configuration integration.
 
-OmniWM, the MacBook's tiling window manager, and its OmniShell bar are
-documented in [omniwm.md](omniwm.md): installation, startup, linked
-configuration files, the macOS hotkey conflict, upgrades and how to change
-its settings.
+AeroSpace, the MacBook's tiling window manager, is documented in
+[aerospace.md](aerospace.md): installation, startup, macOS settings, the
+config file and its keys.
 
 Raycast replaces Spotlight as the launcher. The `raycast` cask installs it,
 and the Home Manager activation step `disableSpotlightHotkey` in
@@ -172,7 +171,7 @@ The shared alias definitions are in:
 
 On macOS, default apps for file types are declared in
 `home/xhan/darwin/file-associations.nix` as extension → bundle ID pairs
-(currently `luau` → Zed, `dev.zed.Zed`, for OmniShell widgets). macOS has
+(currently `luau` → Zed, `dev.zed.Zed`). macOS has
 no declarative setting for this, so a Home Manager activation step passes
 the pairs to `home/xhan/darwin/file-associations/set-default-apps.swift`,
 run with the Command Line Tools' `/usr/bin/swift` (about 3 s), which calls
@@ -188,8 +187,7 @@ extensions. Find a bundle ID with
 Ghostty uses Catppuccin Mocha on both hosts, declared through Home Manager in
 `home/xhan/common/ghostty.nix`. The theme is defined locally with
 `programs.ghostty.themes` (in `~/.config/ghostty/themes/`) rather than
-taken from Ghostty's bundled themes, so that the Ghostty embedded in OmniWM's
-quake terminal, which cannot see the bundled themes, uses it too.
+taken from Ghostty's bundled themes.
 
 The cursor is a block. Ghostty's shell integration would otherwise switch it
 to a bar at the prompt, so its `cursor` feature is disabled with
@@ -309,8 +307,7 @@ another module adding to `homebrew.*`) is uninstalled, so packages installed
 manually with `brew install` disappear at the next activation unless they are
 declared. Dependencies of declared formulae are kept. Cleanup runs only after
 every declared package installed successfully. `"zap"` is deliberately not
-used: it also trashes each removed cask's data, which for OmniWM includes
-`~/.config/omniwm` and its links into this repository.
+used: it also trashes each removed cask's data.
 
 State versions should not be increased automatically.
 

@@ -3,7 +3,7 @@
 let
   # File extension (without the dot) -> bundle ID of the default app that opens it.
   associations = {
-    # OmniShell widgets (Luau), which macOS knows only as a dynamic type.
+    # Luau scripts, which macOS knows only as a dynamic type.
     luau = "dev.zed.Zed";
   };
 

@@ -71,9 +71,6 @@ any genuine false positive.
   computer sleep is fifteen minutes. The password grace period is zero.
   Validate behavior on the installed macOS version after activation.
 - FileVault must be enabled separately; this flake does not enforce it.
-- OmniWM configuration is linked to the working tree and reloads live. Review
-  patches and branch changes before applying them to a checkout used by the
-  running application. See [docs/omniwm.md](docs/omniwm.md).
 
 ## Before making a repository public
 

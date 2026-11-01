@@ -1,7 +1,0 @@
-# Only shell.toml (linked from ~/.config/omniwm/shell) and widgets/ (copied
-# there on activation) are versioned. The allowlist also keeps out files
-# OmniWM wrote here while the whole folder was linked. See docs/omniwm.md.
-/*
-!/.gitignore
-!/shell.toml
-!/widgets/
