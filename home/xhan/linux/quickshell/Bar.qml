@@ -1,5 +1,5 @@
 // Top bar for one screen: workspaces and window title on the left, clock in
-// the middle, tray and volume on the right.
+// the middle, media, network, tray and volume on the right.
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -48,6 +48,14 @@ PanelWindow {
             ActiveWindow {
                 monitor: bar.monitor
                 Layout.fillWidth: true
+            }
+
+            Media {
+                window: bar
+            }
+
+            Network {
+                window: bar
             }
 
             Tray {

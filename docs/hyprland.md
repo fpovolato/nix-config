@@ -189,7 +189,9 @@ disabled in `appearance.lua`.
 Quickshell is a QtQuick shell toolkit; the bar is written in QML in
 `home/xhan/linux/quickshell/` and installed as `~/.config/quickshell/bar`
 (`programs.quickshell.activeConfig = "bar"`). The `quickshell` user service
-starts with `hyprland-session.target`.
+starts with `hyprland-session.target`. `quickshell.nix` adds a generated
+`Scripts.qml` singleton to the installed copy, holding the store paths of the
+network scripts described below.
 
 | File | Contents |
 | --- | --- |
@@ -199,14 +201,42 @@ starts with `hyprland-session.target`.
 | `Workspaces.qml` | Hyprland workspaces of that monitor; click to switch. |
 | `ActiveWindow.qml` | Title of the focused window. |
 | `Clock.qml` | Date and time. |
+| `Media.qml` | Track of the playing (or else paused) MPRIS player, e.g. Spotify or a browser; hidden when there is none. Click to play or pause, scroll to skip, right click for `MediaPanel.qml`. |
+| `MediaPanel.qml` | Player card: cover (click to raise the player), title, artist, album, seekable progress bar, previous/play/next. |
+| `Network.qml` | Icon of the active connection (Ethernet preferred, Wi-Fi with signal strength, red when offline, peach when connectivity is limited) and upload/download rate of the default-route interface. Click for `NetworkPanel.qml`. |
+| `NetworkPanel.qml` | Connection details (interface, link speed or signal) and traffic by process, refreshed every 1.5 s while open. |
+| `BarPopup.qml` | Dropdown card used by both panels; clicking outside it and the bar closes it (`HyprlandFocusGrab`). |
 | `Tray.qml` | System tray; left click activates, right click opens the menu. |
 | `Volume.qml` | Default PipeWire output; scroll to change, click to mute, right click opens pwvucontrol. |
 
 Quickshell 0.3 detects the Lua configuration and sends Lua dispatchers to
 Hyprland when a workspace is clicked. Logs are available with
-`journalctl --user -u quickshell`. To try changes without activating, run
-`quickshell -p home/xhan/linux/quickshell` from the repository inside the
-Hyprland session (stop the service first).
+`journalctl --user -u quickshell`. To try changes without activating, build
+the installed copy and run it inside the Hyprland session (stop the service
+first):
+
+```sh
+quickshell -p "$(nix build --no-link --print-out-paths \
+  .#nixosConfigurations.nixos.config.home-manager.users.xhan.programs.quickshell.configs.bar)"
+```
+
+The connection state comes from NetworkManager through
+`Quickshell.Networking`, the track from MPRIS through
+`Quickshell.Services.Mpris`. Traffic is measured by the two scripts of
+[egoist/omarchy-network-throughput](https://github.com/egoist/omarchy-network-throughput)
+(MIT), pinned by commit in `quickshell.nix` and wrapped with their
+dependencies (GNU awk, iproute2, jq, coreutils):
+
+- `network-throughput` samples `/sys/class/net/<iface>/statistics` of the
+  default-route interface over 0.75 s; the bar runs it every second.
+- `process-throughput` samples per-socket TCP counters with `ss -tinp` and
+  attributes them to processes, without root. Traffic it cannot attribute
+  (UDP and HTTP/3, other users' and system services, short-lived sockets) is
+  the "Other traffic" row. The panel's row-keeping rules are adapted from
+  the same project's panel; its Omarchy-specific QML is not used.
+
+To update the scripts, change `rev` and `hash` of `fetchFromGitHub` in
+`quickshell.nix`.
 
 ## Launcher: Vicinae
 
