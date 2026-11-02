@@ -14,5 +14,6 @@
 
   users.users.xhan.openssh.authorizedKeys.keyFiles = [
     "${privateFiles}/public-keys/ssh/macbook.pub"
+    "${privateFiles}/public-keys/ssh/macbook-nixos.pub"
   ];
 }

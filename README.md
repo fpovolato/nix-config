@@ -233,10 +233,10 @@ evaluating either host.
 
 ### 4. Create your own `nix-secrets`
 
-`nix-secrets` is a private, non-flake input. Today it supplies one file:
-the **public** SSH key that may log in to the NixOS host, at
-`public-keys/ssh/macbook.pub`. Both hosts need the input to evaluate, even if
-you only use the Mac.
+`nix-secrets` is a private, non-flake input. Today it supplies the
+**public** SSH keys that may log in to the NixOS host, at
+`public-keys/ssh/macbook.pub` and `public-keys/ssh/macbook-nixos.pub`.
+Both hosts need the input to evaluate, even if you only use the Mac.
 
 1. On GitHub, create an empty **private** repository named `nix-secrets`
    (no README, license or `.gitignore`). Check that SSH access to GitHub works:
@@ -256,14 +256,16 @@ you only use the Mac.
    cd ~/nix-secrets
    git init -b main
    cp ~/.ssh/id_ed25519.pub public-keys/ssh/macbook.pub
-   git add public-keys/ssh/macbook.pub
+   cp ~/.ssh/id_ed25519.pub public-keys/ssh/macbook-nixos.pub
+   git add public-keys/ssh
    git commit -m "Add SSH login public key"
    git remote add origin git@github.com:YOUR_ACCOUNT/nix-secrets.git
    git push -u origin main
    ```
 
-   Keep the file name `macbook.pub` unless you also change the path in
-   `modules/nixos/ssh.nix`. The key is the one allowed to log in to NixOS over
+   Keep both file names unless you also change the paths in
+   `modules/nixos/ssh.nix`; both must exist for NixOS to evaluate. They may
+   hold the same key. The key is the one allowed to log in to NixOS over
    SSH, so use a key from the machine you will connect from.
 
 3. Point your fork at it. In `flake.nix`, set:
@@ -346,10 +348,11 @@ git config --local user.email "YOUR_VERIFIED_OR_NOREPLY_EMAIL"
 ```
 
 Changing the Mac configuration does not grant access to the NixOS host.
-The pinned `nix-secrets` input supplies `public-keys/ssh/macbook.pub`, which
-authorizes the maintainer's key on Linux only. If you also adopt the Linux
-configuration, put your own **public** key in your `nix-secrets` (step 4) and
-review Linux usernames and hardware configuration separately. Never copy a
+The pinned `nix-secrets` input supplies `public-keys/ssh/macbook.pub` and
+`public-keys/ssh/macbook-nixos.pub`, which authorize the maintainer's keys on
+Linux only. If you also adopt the Linux configuration, put your own **public**
+keys in your `nix-secrets` (step 4) and review Linux usernames and hardware
+configuration separately. Never copy a
 private SSH key into either repository.
 
 ### 6. Review what activation changes

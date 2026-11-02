@@ -272,8 +272,10 @@ Homebrew applications on macOS.
 
 The private `nix-secrets` repository is a pinned non-flake input fetched over
 SSH. Both host evaluations require access to this input. NixOS receives it as
-`privateFiles` through `specialArgs` and loads its public SSH login key from
-`public-keys/ssh/macbook.pub` in `modules/nixos/ssh.nix`.
+`privateFiles` through `specialArgs` and loads its public SSH login keys from
+`public-keys/ssh/macbook.pub` and `public-keys/ssh/macbook-nixos.pub` in
+`modules/nixos/ssh.nix`. The second key (`~/.ssh/id_ed25519_nixos` on the Mac)
+is dedicated to NixOS logins.
 
 The login key is unchanged; its source has moved out of this repository.
 It remains distinct from the dedicated agenix administrator encryption key.
