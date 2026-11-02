@@ -60,8 +60,8 @@ directory to the Lua module path, so `require("conf.keybinds")` loads
 | File | Contents |
 | --- | --- |
 | `env.lua` | Environment variables: cursor theme and size, `NIXOS_OZONE_WL` for Electron apps. |
-| `monitors.lua` | DP-3 (3440×1440, left) and DP-2 (2560×1440, right), highest refresh rate; a fallback for other outputs. |
-| `workspaces.lua` | Workspaces 1–5 on DP-3, 6–9 on DP-2, all persistent. |
+| `monitors.lua` | DP-2 (LG UltraGear, 2560×1440, left, main) and DP-3 (3440×1440 ultrawide, right), highest refresh rate; a fallback for other outputs. |
+| `workspaces.lua` | Workspaces 1–5 on DP-2 (LG), 6–9 on DP-3, all persistent. |
 | `input.lua` | US layout, Caps Lock as Control (as on the MacBook), key repeat, flat mouse acceleration. |
 | `appearance.lua` | Gaps, borders, rounding, blur, shadows, animations and misc options. |
 | `windowrules.lua` | Window rules (Spotify on workspace 8, floating dialogs and utilities, picture-in-picture) and the layer rule that blurs the bar. |
