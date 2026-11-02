@@ -10,13 +10,16 @@
     gtk.enable = true;
   };
 
-  # Dark GTK theme and icons, matching the greeter.
+  # Magnetic Catppuccin GTK theme and icons, matching the greeter.
   gtk = {
     enable = true;
 
     theme = {
-      package = pkgs.gnome-themes-extra;
-      name = "Adwaita-dark";
+      package = pkgs.magnetic-catppuccin-gtk.override {
+        accent = [ "mauve" ];
+        shade = "dark";
+      };
+      name = "Catppuccin-GTK-Mauve-Dark";
     };
 
     iconTheme = {

@@ -7,6 +7,7 @@
 {
   home.packages = with pkgs; [
     # Normie apps
+    discord
     obsidian
     spotify
 

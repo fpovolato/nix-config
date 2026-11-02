@@ -78,7 +78,8 @@ for an agent to understand the setup, change it and validate the result.
   (Super+Space, like Raycast on the Mac).
 - [x] PipeWire audio, Fish as login shell and the shared applications
   available in Nixpkgs.
-- [x] Limine bootloader with a Windows boot entry.
+- [x] Limine bootloader with a Catppuccin theme, older generations in a
+  submenu and a Windows boot entry.
 - [x] Btrfs subvolumes with Zstd compression.
 - [x] NetworkManager and SSH restricted to the configured user, with password
   and keyboard-interactive authentication disabled.

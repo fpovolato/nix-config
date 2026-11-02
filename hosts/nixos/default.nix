@@ -11,6 +11,7 @@
     ../../modules/nixos/greetd.nix
     ../../modules/nixos/home-manager.nix
     ../../modules/nixos/hyprland.nix
+    ../../modules/nixos/limine-generations.nix
     ../../modules/nixos/networking.nix
     ../../modules/nixos/nix.nix
     ../../modules/nixos/nixpkgs.nix

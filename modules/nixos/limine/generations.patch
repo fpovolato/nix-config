@@ -1,0 +1,82 @@
+--- a/limine-install.py
++++ b/limine-install.py
+@@ -322,21 +322,21 @@
+     return entry
+ 
+ 
+-def generate_config_entry(profile: str, gen: str, special: bool) -> str:
++def generate_config_entry(profile: str, gen: str, special: bool, depth: int = 2, label: Optional[str] = None) -> str:
+     time = datetime.datetime.fromtimestamp(os.stat(get_system_path(profile,gen), follow_symlinks=False).st_mtime).strftime("%F %H:%M:%S")
+     boot_json = json.load(open(os.path.join(get_system_path(profile, gen), 'boot.json'), 'r'))
+     boot_spec = bootjson_to_bootspec(boot_json)
+ 
+     specialisation_list = boot_spec.specialisations.items()
+-    depth = 2
+-    entry = ""
++    entry = ""
++    label = label or f'Generation {gen}'
+ 
+     # Xen, if configured, should be listed first for each generation
+     if boot_spec.xen and 'version' in boot_spec.xen:
+         xen_version = boot_spec.xen['version']
+         if config('efiSupport'):
+-            entry += xen_config_entry(2, boot_spec, xen_version, gen, time, True)
+-        entry += xen_config_entry(2, boot_spec, xen_version, gen, time, False)
++            entry += xen_config_entry(depth, boot_spec, xen_version, gen, time, True)
++        entry += xen_config_entry(depth, boot_spec, xen_version, gen, time, False)
+ 
+     if len(specialisation_list) > 0:
+         depth += 1
+@@ -345,10 +345,10 @@
+         if special:
+             entry += '+'
+ 
+-        entry += f'Generation {gen}' + '\n'
++        entry += label + '\n'
+         entry += config_entry(depth, boot_spec, f'Default', str(time))
+     else:
+-        entry += config_entry(depth, boot_spec, f'Generation {gen}', str(time))
++        entry += config_entry(depth, boot_spec, label, str(time))
+ 
+     for spec, spec_boot_spec in specialisation_list:
+         entry += config_entry(depth, spec_boot_spec, f'{spec}', str(time))
+@@ -467,7 +467,7 @@
+         editor_enabled: {editor_enabled}
+         hash_mismatch_panic: {hash_mismatch_panic}
+         graphics: yes
+-        default_entry: {3 if len(last_gen_boot_spec.specialisations.items()) > 0 else 2}
++        default_entry: {2 if len(last_gen_boot_spec.specialisations.items()) > 0 else 1}
+     ''')
+ 
+     for wallpaper in config('style', 'wallpapers'):
+@@ -497,16 +497,22 @@
+         # {config('distroName')} boot entries start here
+     ''')
+ 
+-    for (profile, gens) in profiles:
+-        group_name = 'default profile' if profile == 'system' else f"profile '{profile}'"
+-        config_file += f'/+{config('distroName')} {group_name}\n'
++    # The newest generation of the default profile is a top-level entry; the
++    # older ones are grouped in a collapsed "Previous generations" directory.
++    for (profile, gens) in profiles:
++        gens = sorted(gens, key=lambda x: x, reverse=True)
+ 
+-        isFirst = True
++        if profile == 'system':
++            config_file += generate_config_entry(profile, gens[0], True, 1, f"{config('distroName')} (generation {gens[0]})")
++            if len(gens) > 1:
++                config_file += '/Previous generations\n'
++                for gen in gens[1:]:
++                    config_file += generate_config_entry(profile, gen, False)
++        else:
++            config_file += f"/{config('distroName')} profile '{profile}'\n"
++            for gen in gens:
++                config_file += generate_config_entry(profile, gen, False)
+ 
+-        for gen in sorted(gens, key=lambda x: x, reverse=True):
+-            config_file += generate_config_entry(profile, gen, isFirst)
+-            isFirst = False
+-
+     config_file_path = os.path.join(limine_install_dir, 'limine.conf')
+     config_file += f'\n# {config('distroName')} boot entries end here\n\n'
+ 

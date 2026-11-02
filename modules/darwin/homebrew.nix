@@ -36,6 +36,7 @@
 
     casks = [
       # Normie Apps
+      "discord"
       "spotify"
       "obsidian"
       "zennotes/tap/zennotes"
