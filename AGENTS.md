@@ -129,6 +129,12 @@ Read it before changing `modules/darwin/aerospace.nix`,
 `home/xhan/darwin/aerospace.nix` or `home/xhan/darwin/aerospace/`, and
 update it with those changes.
 
+The NixOS desktop (greetd/ReGreet, Hyprland, Quickshell, Vicinae, hyprpaper)
+is documented in `docs/hyprland.md`. Read it before changing
+`modules/nixos/greetd.nix`, `modules/nixos/hyprland.nix` or the matching files
+in `home/xhan/linux/`, and update it with those changes. Check Hyprland's Lua
+files with `Hyprland --verify-config` on the NixOS machine.
+
 SketchyBar (a candidate status bar, installed but not started) is documented
 in `docs/sketchybar.md`. Read it before changing
 `modules/darwin/sketchybar.nix`, `home/xhan/darwin/sketchybar.nix` or

@@ -5,12 +5,15 @@
     ./hardware-configuration.nix
     ./boot.nix
 
+    ../../modules/nixos/audio.nix
     ../../modules/nixos/boot.nix
     ../../modules/nixos/filesystems.nix
+    ../../modules/nixos/greetd.nix
     ../../modules/nixos/home-manager.nix
     ../../modules/nixos/hyprland.nix
     ../../modules/nixos/networking.nix
     ../../modules/nixos/nix.nix
+    ../../modules/nixos/nixpkgs.nix
     ../../modules/nixos/packages.nix
     ../../modules/nixos/ssh.nix
     ../../modules/nixos/users.nix

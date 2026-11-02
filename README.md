@@ -35,6 +35,7 @@ for an agent to understand the setup, change it and validate the result.
 | --- | --- | --- |
 | **System** | NixOS · `x86_64-linux` | nix-darwin · `aarch64-darwin` |
 | **Window manager** | Hyprland | AeroSpace |
+| **Login, bar, launcher** | ReGreet, Quickshell, Vicinae | macOS, menu bar, Raycast |
 | **Terminal** | Ghostty | Ghostty |
 | **Shell & prompt** | Fish + Starship | Fish + Starship |
 | **Theme** | Catppuccin Mocha | Catppuccin Mocha |
@@ -70,7 +71,13 @@ for an agent to understand the setup, change it and validate the result.
 > tailored to the maintainer's hardware and not recommended for use yet.
 > The macOS setup is the supported path.
 
-- [x] Hyprland with XWayland support.
+- [x] ReGreet login screen on greetd, started at boot.
+- [x] Hyprland with XWayland support and a Lua configuration split by purpose
+  (monitors, input, appearance, window rules, key bindings).
+- [x] Quickshell status bar, hyprpaper wallpaper and the Vicinae launcher
+  (Super+Space, like Raycast on the Mac).
+- [x] PipeWire audio, Fish as login shell and the shared applications
+  available in Nixpkgs.
 - [x] Limine bootloader with a Windows boot entry.
 - [x] Btrfs subvolumes with Zstd compression.
 - [x] NetworkManager and SSH restricted to the configured user, with password

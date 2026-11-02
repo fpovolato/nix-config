@@ -6,8 +6,14 @@
     ./common/fish.nix
     ./common/git.nix
     ./common/nix-tools.nix
+    ./linux/apps.nix
     ./linux/chromium.nix
     ./linux/ghostty.nix
+    ./linux/hyprland.nix
+    ./linux/quickshell.nix
+    ./linux/theme.nix
+    ./linux/vicinae.nix
+    ./linux/wallpaper.nix
   ];
 
   # Build and activate from interactive Fish.

@@ -17,7 +17,10 @@ managed separately from this configuration.
 - Platform: x86_64-linux
 - Operating system: NixOS 26.05
 - User: xhan
-- Window manager: Hyprland
+- Display manager: greetd with ReGreet
+- Window manager: Hyprland (Lua configuration)
+- Status bar: Quickshell
+- Launcher: Vicinae
 - Shell: Fish
 - Package management: Nixpkgs
 - User configuration: Home Manager
@@ -57,6 +60,14 @@ The exact input revisions are recorded in `flake.lock`.
 
 NixOS modules configure Linux services, users, boot
 and the desktop environment.
+
+The NixOS desktop is split under `modules/nixos/` (`greetd.nix`,
+`hyprland.nix`, `audio.nix`, `users.nix`, `nixpkgs.nix`) and
+`home/xhan/linux/` (Hyprland's Lua files, Quickshell, Vicinae, hyprpaper,
+theme and shared applications). It is documented in
+[hyprland.md](hyprland.md): startup from the ReGreet login screen, the
+Hyprland configuration files and key bindings, the bar, the launcher and
+activation.
 
 nix-darwin modules configure macOS and orchestrate Homebrew.
 
