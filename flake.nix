@@ -19,6 +19,14 @@
 
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
 
+    # Zen is not in Nixpkgs; this community flake packages the official
+    # binaries for Linux. The MacBook installs Zen from Homebrew.
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     nix-secrets = {
       url = "git+ssh://git@github.com/fpovolato/nix-secrets.git?ref=main";
       flake = false;
@@ -31,11 +39,15 @@
     nix-darwin,
     nix-homebrew,
     nix-secrets,
+    zen-browser,
     ...
   }: {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      specialArgs.privateFiles = nix-secrets;
+      specialArgs = {
+        privateFiles = nix-secrets;
+        inherit zen-browser;
+      };
       modules = [
         home-manager.nixosModules.home-manager
         ./hosts/nixos

@@ -272,11 +272,19 @@ installed from Nixpkgs with the shared configuration
 ## Shared applications
 
 `home/xhan/linux/apps.nix` installs the Linux versions of applications the
-MacBook gets from Homebrew: Discord, Obsidian, Spotify, Zed, Claude Code, tmux, tuios
-and mkcert. The browser remains Chromium (`home/xhan/linux/chromium.nix`).
-Unfree packages are allowed by name in `modules/nixos/nixpkgs.nix`.
-ZenNotes, Zen, Helium, ChatGPT, the Claude desktop app and ArtCraft are not
-packaged in Nixpkgs and are not installed.
+MacBook gets from Homebrew: Discord, Obsidian, Spotify, Zed, Claude Code, tmux,
+tuios, mkcert and the browsers Brave, LibreWolf and Zen. Chromium is also
+installed (`home/xhan/linux/chromium.nix`). Unfree packages are allowed by
+name in `modules/nixos/nixpkgs.nix`.
+
+Zen is not in Nixpkgs: it comes from the community flake
+[0xc000022070/zen-browser-flake](https://github.com/0xc000022070/zen-browser-flake)
+(flake input `zen-browser`, following this repository's `nixpkgs` and
+`home-manager`), which packages the official release binaries. It is passed
+to Home Manager through `home-manager.extraSpecialArgs` in
+`modules/nixos/home-manager.nix`; `nix flake update zen-browser` updates it.
+ZenNotes, Helium, ChatGPT, the Claude desktop app and ArtCraft are not
+packaged and are not installed.
 
 ## Activation
 

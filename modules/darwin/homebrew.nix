@@ -60,6 +60,8 @@
 
       # Browsers
       "zen"
+      "brave-browser"
+      "librewolf"
       "helium-browser"
       # The "chromium" cask is disabled (fails the Gatekeeper check).
       "ungoogled-chromium"

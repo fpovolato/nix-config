@@ -5,6 +5,7 @@
   # configuration through home-manager.useGlobalPkgs.
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
+      "brave"
       "claude-code"
       "discord"
       "obsidian"
